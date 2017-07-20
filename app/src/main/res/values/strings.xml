@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">StockFinder</string>
+    <string-array name="sectors">
+        <item>Any</item>
+        <item>Finance</item>
+        <item>Energy</item>
+        <item>Technology</item>
+        <item>Materials</item>
+
+
+    </string-array>
+    <string-array name="peratio">
+        <item>Any</item>
+        <item>0 - 15</item>
+        <item>16 - 30</item>
+        <item>31 and up </item>
+    </string-array>
+
+    <string-array name="marketcap">
+        <item>Any</item>
+        <item>0 - 100m</item>
+        <item>101m - 1b</item>
+        <item>2b - 10b</item>
+        <item>11b - 100b</item>
+        <item>100b and up</item>
+    </string-array>
+    <string-array name="volume">
+        <item>Any </item>
+        <item>low: 0-100k</item>
+        <item>med 100k-1m</item>
+        <item>high 1m up</item>
+    </string-array>
+    <string-array name="percentchange">
+        <item>Any</item>
+        <item>+5%</item>
+        <item>+10%</item>
+        <item>+15%</item>
+    </string-array>
+
+    <string-array name="eps">
+        <item></item>
+
+
+    </string-array>
+</resources>
