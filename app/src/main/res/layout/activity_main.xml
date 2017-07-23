@@ -22,6 +22,7 @@
         android:layout_marginBottom="8dp" />
 
     <Button
+        android:onClick="stocks"
         android:id="@+id/button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -38,10 +39,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="% Change Today"
+        android:text="Percent Change"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="8dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/textView7"
@@ -52,10 +54,10 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/spinner4" />
+        app:layout_constraintTop_toBottomOf="@+id/percentSpinner" />
 
     <Spinner
-        android:id="@+id/spinner8"
+        android:id="@+id/volumeSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -74,10 +76,10 @@
         android:text="Market Cap"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner8" />
+        app:layout_constraintTop_toBottomOf="@+id/volumeSpinner" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/marketcapSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -87,48 +89,27 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <TextView
-        android:text="Sector"
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/spinner4"
-        app:layout_constraintStart_toStartOf="@+id/textView3" />
-
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:entries="@array/sectors"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="P/E Ratio"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2"
-        app:layout_constraintStart_toStartOf="@+id/spinner3"
+        app:layout_constraintStart_toStartOf="@+id/peratioSpinner"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/marketcapSpinner" />
+
+    <Spinner
+        android:id="@+id/peratioSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:entries="@array/peratio"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="8dp" />
 
     <Spinner
-        android:id="@+id/spinner3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:entries="@array/peratio"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <Spinner
-        android:id="@+id/spinner4"
+        android:id="@+id/percentSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/percentchange"
