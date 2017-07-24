@@ -50,7 +50,16 @@ public class MainActivity extends AppCompatActivity {
         if (volumeString == "high 1m up")
             volumeString = "volume~gte~1000000";
 
-        i
+        if (marketcapString == "Any")
+            marketcapString = "";
+        if (marketcapString == "0 - 100m")
+            marketcapString = "marketcap~lte 100000000";
+        if (marketcapString == "100m - 1b")
+            marketcapString = "marketcap~gte~100000000~lt~1000000000";
+        if (marketcapString == "1b - 10b")
+            marketcapString = "marketcap~gte~1000000000~lt~10000000000";
+        
+
 
 
 

@@ -19,9 +19,9 @@
     <string-array name="marketcap">
         <item>Any</item>
         <item>0 - 100m</item>
-        <item>101m - 1b</item>
-        <item>2b - 10b</item>
-        <item>11b - 100b</item>
+        <item>100m - 1b</item>
+        <item>1b - 10b</item>
+        <item>10b - 100b</item>
         <item>100b and up</item>
     </string-array>
     <string-array name="volume">
