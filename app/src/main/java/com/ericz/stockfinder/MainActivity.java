@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         percentSpinner = (Spinner) findViewById(R.id.percentSpinner);
         volumeSpinner = (Spinner) findViewById(R.id.volumeSpinner);
-        sectorSpinner = (Spinner) findViewById(R.id.sectorSpinner);
+//        sectorSpinner = (Spinner) findViewById(R.id.sectorSpinner);
         marketcapSpinner = (Spinner) findViewById(R.id.marketcapSpinner);
         peratioSpinner = (Spinner) findViewById(R.id.peratioSpinner);
     }
@@ -31,6 +31,28 @@ public class MainActivity extends AppCompatActivity {
         String sectorString = sectorSpinner.getSelectedItem().toString();
         String marketcapString = marketcapSpinner.getSelectedItem().toString();
         String peratioString = peratioSpinner.getSelectedItem().toString();
+
+        if (percentString == "Any")
+            percentString = "";
+        if (percentString == "+5%")
+            percentString = "percent_change~gte~5";
+        if (percentString == "+10%")
+            percentString = "percent_change~gte~10";
+        if (percentString == "+15%")
+            percentString = "percent_change~gte~15";
+
+        if (volumeString == "Any")
+            volumeString = "";
+        if (volumeString == "low: 0-100k")
+            volumeString = "volume~lte~100000";
+        if (volumeString == "med 100k-1m")
+            volumeString = "volume~gte~100000";
+        if (volumeString == "high 1m up")
+            volumeString = "volume~gte~1000000";
+
+        i
+
+
 
     }
 
