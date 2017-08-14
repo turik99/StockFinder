@@ -1,6 +1,7 @@
 package com.ericz.stockfinder;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,16 +10,22 @@ import android.support.v7.widget.CardView;
 import android.text.Layout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.w3c.dom.Text;
+
+import static android.content.ContentValues.TAG;
 
 public class StockActivity extends AppCompatActivity {
 
@@ -39,6 +46,7 @@ public class StockActivity extends AppCompatActivity {
 
 
 
+            CardView card = (CardView) findViewById(R.id.descriptionCardView);
 
             TextView peratio = (TextView) findViewById(R.id.peRatioTextStock);
             peratio.setText("P/E Ratio: " + stock.get("pricetoearnings").toString());
@@ -73,7 +81,7 @@ public class StockActivity extends AppCompatActivity {
                     "</script>\n" +
                     "<!-- TradingView Widget END -->\n";
 
-            WebView webView = (WebView) findViewById(R.id.webView) ;
+            final WebView webView = (WebView) findViewById(R.id.webView) ;
             webView.getSettings().setJavaScriptEnabled(true);
             webView.loadUrl("https://d33t3vvu2t2yu5.cloudfront.net/tv.js");
             webView.loadData(html, "text/html", "utf-8");
@@ -81,6 +89,20 @@ public class StockActivity extends AppCompatActivity {
 
             GetDescription getDescription = new GetDescription((String)stock.get("ticker"));
             getDescription.execute();
+
+            ScrollView scroll = (ScrollView)findViewById(R.id.stockViewScrollView);
+            scroll.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (webView.hasFocus()) {
+                        webView.clearFocus();
+                    }
+                    return false;
+                }
+            });
+
+
+
 
         }
         catch (Exception e)
@@ -155,4 +177,7 @@ public class StockActivity extends AppCompatActivity {
         }
 
     }
+
 }
+
+
