@@ -1,19 +1,18 @@
 <resources>
-    <string name="app_name">StockFinder</string>
+    <string name="app_name">Psaximo</string>
     <string-array name="sectors">
         <item>Any</item>
         <item>Finance</item>
         <item>Energy</item>
         <item>Technology</item>
         <item>Materials</item>
-
-
     </string-array>
+
     <string-array name="peratio">
         <item>Any</item>
         <item>0 - 15</item>
-        <item>16 - 30</item>
-        <item>31 and up </item>
+        <item>15 - 30</item>
+        <item>30 and up </item>
     </string-array>
 
     <string-array name="marketcap">
@@ -24,12 +23,14 @@
         <item>10b - 100b</item>
         <item>100b and up</item>
     </string-array>
+
     <string-array name="volume">
         <item>Any </item>
         <item>low: 0-100k</item>
         <item>med 100k-1m</item>
         <item>high 1m up</item>
     </string-array>
+
     <string-array name="percentchange">
         <item>Any</item>
         <item>+5%</item>
@@ -38,8 +39,81 @@
     </string-array>
 
     <string-array name="eps">
-        <item></item>
+        <item>Any</item>
+        <item>0 - 1$</item>
+        <item>1 - 5$</item>
+        <item>5$ and up</item>
+    </string-array>
 
+    <string-array name="earnings">
+        <item>Any</item>
+        <item>Next 5 days</item>
+        <item>Next 10 days</item>
+        <item>Next 30 days</item>
+    </string-array>
+
+    <string-array name="price">
+        <item>Any</item>
+        <item>$0 to $1</item>
+        <item>$1 to $5</item>
+        <item>$5 to $20</item>
+        <item>$20 to $100</item>
+        <item>$100 to $200</item>
+        <item>200$ and up</item>
+    </string-array>
+
+    <string-array name="sector">
+        <item>Any</item>
+        //0
+        <item>Agriculture, Forestry and Fishing	</item>
+        //1
+        <item>Mining</item>
+        //2
+        <item>Construction</item>
+        //3
+        <item>Manufacturing</item>
+        //4
+        <item>Transportation</item>
+        //5
+        <item>Wholesale Trade</item>
+        //6
+        <item>Retail Trade</item>
+        //7
+        <item>Finance, Insurance and Real Estate</item>
+        //8
+        <item>Services</item>
+        //9
+        <item>Semiconductors</item>
+        //10
+        <item>Miscellaneous</item>
+        //11
+
+    </string-array>
+
+    <string-array name="exchange">
+        <item>Any</item>
+        <item>NYSE</item>
+
+        <item>NASDAQ</item>
+    </string-array>
+
+    <string-array name="debt_to_equity">
+        <item>Any</item>
+        <item>High (&gt;.5)</item>
+        <item>Low (&lt;0.1)</item>
+    </string-array>
+
+    <string name="sample">
+        This is a sample description . this company deals with x y and z, and are market leaders in z
+        theyre business model is to make money and they make money by selling x y and z. they are founded
+        by john smith. l;aksdajfdlk;asdjdflkasjddflkassjdfdkl;asjlkfjaslkfjaskljfkljd I CANT THINK OF MORE SAMPLKE
+        TEXT SOMEONE Please think of some samaple text for me most descriptions are longer than this and i want to
+        see that in the layout file .
+    </string>
+    <string-array name="multiples">
+        <item>pick a multiple</item>
+        <item>K</item>
+        <item>M</item>
 
     </string-array>
 </resources>
