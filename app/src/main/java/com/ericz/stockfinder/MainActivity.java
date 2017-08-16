@@ -2,11 +2,15 @@ package com.ericz.stockfinder;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.BitmapFactory;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -46,6 +51,24 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private ListView listView;
+
+
+    IInAppBillingService mService;
+
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +90,24 @@ public class MainActivity extends AppCompatActivity {
         stockExchangeSpinner = (Spinner) findViewById(R.id.exchangeSpinner);
         debtEquitySpinner = (Spinner) findViewById(R.id.debtEquitySpinner);
 
+
+        Intent serviceIntent =
+                new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
+
+
     }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
+    }
+
 
     public void stocks(View view)
     {
@@ -179,9 +219,9 @@ public class MainActivity extends AppCompatActivity {
             price = ",close_price~gte~1,close_price~lte~5";
         }
 
-        if (price.equals("5$ to $20") )
+        if (price.equals("$5 to $20") )
         {
-            price = ",close_price~gte~5.00,close_price_lte_20";
+            price = ",close_price~gte~5,close_price~lte~20";
         }
         if (price.equals("$20 to $100"))
         {
@@ -402,6 +442,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
 
 }

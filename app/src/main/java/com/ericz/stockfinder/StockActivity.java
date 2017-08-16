@@ -46,7 +46,7 @@ public class StockActivity extends AppCompatActivity {
 
 
 
-            CardView card = (CardView) findViewById(R.id.descriptionCardView);
+            final CardView card = (CardView) findViewById(R.id.descriptionCardView);
 
             TextView peratio = (TextView) findViewById(R.id.peRatioTextStock);
             peratio.setText("P/E Ratio: " + stock.get("pricetoearnings").toString());
@@ -91,17 +91,27 @@ public class StockActivity extends AppCompatActivity {
             getDescription.execute();
 
             ScrollView scroll = (ScrollView)findViewById(R.id.stockViewScrollView);
-            scroll.setOnTouchListener(new View.OnTouchListener() {
+
+            descriptionText.setMaxLines(5);
+
+            final Button moreButton = (Button) findViewById(R.id.moreButton);
+            moreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (webView.hasFocus()) {
-                        webView.clearFocus();
+                public void onClick(View v) {
+                    if (descriptionText.getMaxLines() == 5)
+                    {
+
+                        descriptionText.setMaxLines(100);
+                        moreButton.setText("Less");
+
                     }
-                    return false;
+                    else
+                    {
+                        moreButton.setText("More");
+                        descriptionText.setMaxLines(5);
+                    }
                 }
             });
-
-
 
 
         }
