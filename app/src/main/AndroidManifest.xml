@@ -34,7 +34,9 @@
         <activity android:name=".ResultsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ericz.stockfinder.MainActivity"></meta-data>
+                android:value="com.ericz.stockfinder.MainActivity">
+
+            </meta-data>
         </activity>
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
