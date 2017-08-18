@@ -35,32 +35,20 @@ public class StockActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock);
-
         try
         {
             stock = new JSONObject(getIntent().getStringExtra("object"));
-
             Log.v("objet test", getIntent().getStringExtra("object"));
             TextView volume = (TextView) findViewById(R.id.volumeTextStock);
             volume.setText("Volume: " + stock.get("adj_volume").toString());
-
-
-
             final CardView card = (CardView) findViewById(R.id.descriptionCardView);
-
             TextView peratio = (TextView) findViewById(R.id.peRatioTextStock);
             peratio.setText("P/E Ratio: " + stock.get("pricetoearnings").toString());
-
             TextView ticker = (TextView) findViewById(R.id.tickerTextStock);
             ticker.setText(stock.getString("name"));
-
             TextView sector = (TextView) findViewById(R.id.sectorTextStock);
             sector.setText("Sector: " + getIntent().getStringExtra("sector"));
-
             final TextView descriptionText = (TextView) findViewById(R.id.descriptionText);
-
-
-
             String html = "<!-- TradingView Widget BEGIN -->\n" +
                     "<script type=\"text/javascript\" src=\"https://d33t3vvu2t2yu5.cloudfront.net/tv.js\"></script>\n" +
                     "<script type=\"text/javascript\">\n" +
@@ -93,7 +81,6 @@ public class StockActivity extends AppCompatActivity {
             ScrollView scroll = (ScrollView)findViewById(R.id.stockViewScrollView);
 
             descriptionText.setMaxLines(5);
-
             final Button moreButton = (Button) findViewById(R.id.moreButton);
             moreButton.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
 
+    private boolean hasSubscription;
+
+
 
     IInAppBillingService mService;
 
@@ -67,14 +70,14 @@ public class MainActivity extends AppCompatActivity {
             mService = IInAppBillingService.Stub.asInterface(service);
         }
     };
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
+        Intent intent = new Intent(MainActivity.this, SubscriptionMain.class);
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    
+
     @Override
     public void onDestroy() {
         super.onDestroy();
