@@ -47,13 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner priceSpinner;
     private Spinner stockExchangeSpinner;
     private Spinner debtEquitySpinner;
-    private JSONArray jsonArray;
     private ProgressDialog progressDialog;
-
-    private ListView listView;
-
-    private boolean hasSubscription;
-
 
 
     IInAppBillingService mService;
@@ -118,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
         String volumeString = volumeSpinner.getSelectedItem().toString();
         int sector = sectorSpinner.getSelectedItemPosition();
         String marketcapString = marketcapSpinner.getSelectedItem().toString();
-        String peratioString = peratioSpinner.getSelectedItem().toString();
 
         String sectorString = "";
         if (percentString.equals("Any") ){
