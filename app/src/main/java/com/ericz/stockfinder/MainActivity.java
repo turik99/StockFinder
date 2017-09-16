@@ -87,13 +87,7 @@ public class MainActivity extends AppCompatActivity {
         stockExchangeSpinner = (Spinner) findViewById(R.id.exchangeSpinner);
         debtEquitySpinner = (Spinner) findViewById(R.id.debtEquitySpinner);
 
-
-        Intent serviceIntent =
-                new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-
-
+        
 
     }
 
