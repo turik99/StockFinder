@@ -74,6 +74,13 @@ public class StockActivity extends AppCompatActivity {
             webView.loadUrl("https://d33t3vvu2t2yu5.cloudfront.net/tv.js");
             webView.loadData(html, "text/html", "utf-8");
 
+            webView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return (event.getAction() == MotionEvent.ACTION_MOVE);
+                }
+            });
+
 
             GetDescription getDescription = new GetDescription((String)stock.get("ticker"));
             getDescription.execute();

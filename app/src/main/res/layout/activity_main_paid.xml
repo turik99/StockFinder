@@ -118,15 +118,6 @@
             app:layout_constraintBottom_toTopOf="@+id/textView14"
             app:layout_constraintStart_toEndOf="@+id/textView13" />
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:text="K"
-            app:layout_constraintBottom_toBottomOf="@+id/volumeText1Premium"
-            app:layout_constraintStart_toEndOf="@+id/volumeText1Premium" />
-
         <Spinner
             android:id="@+id/sectorSpinnerPremium"
             android:layout_width="135dp"
@@ -141,12 +132,12 @@
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
             android:text="to"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintBottom_toBottomOf="@+id/button2"
-            app:layout_constraintStart_toEndOf="@+id/button2" />
+            app:layout_constraintStart_toEndOf="@+id/volumeText1Premium"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/volumeText1Premium"
+            android:layout_marginBottom="8dp" />
 
         <EditText
             android:id="@+id/volumeText2Premium"
@@ -159,16 +150,6 @@
             android:inputType="number"
             app:layout_constraintStart_toEndOf="@+id/textView16"
             app:layout_constraintTop_toTopOf="@+id/volumeText1Premium" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:layout_marginStart="0dp"
-            android:text="K"
-            app:layout_constraintBottom_toBottomOf="@+id/volumeText2Premium"
-            app:layout_constraintStart_toEndOf="@+id/volumeText2Premium" />
 
         <TextView
             android:id="@+id/textView15"

@@ -100,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void premiumclick(View view)
+    {
+        Intent intent = new Intent(this, SubscriptionMain.class);
+        startActivity(intent);
+    }
     public void stocks(View view)
     {
         String percentString = percentSpinner.getSelectedItem().toString();
