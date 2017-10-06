@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -73,6 +74,9 @@ public class StockActivity extends AppCompatActivity {
             webView.getSettings().setJavaScriptEnabled(true);
             webView.loadUrl("https://d33t3vvu2t2yu5.cloudfront.net/tv.js");
             webView.loadData(html, "text/html", "utf-8");
+
+            WebSettings settings = webView.getSettings();
+            settings.setDomStorageEnabled(true);
 
             webView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
