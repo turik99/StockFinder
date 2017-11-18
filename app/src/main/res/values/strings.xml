@@ -1,5 +1,21 @@
 <resources>
     <string name="app_name">Psaximo</string>
+    <string name="sorry">Subscribe to continue.</string>
+
+    <string-array name="pricetobook">
+        <item>Any</item>
+        <item>0 - 1</item>
+        <item>1 - 2</item>
+        <item>2 - 3</item>
+        <item>3 and up</item>
+    </string-array>
+    <string-array name="profit">
+        <item>Any</item>
+        <item>+5%</item>
+        <item>+10%</item>
+        <item>+20%</item>
+        <item>+30%</item>
+    </string-array>
     <string-array name="sectors">
         <item>Any</item>
         <item>Finance</item>

@@ -1,36 +1,27 @@
 package com.ericz.stockfinder;
 
-import android.app.Dialog;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.os.IBinder;
-import android.support.v4.content.SharedPreferencesCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
-import com.ericz.stockfinder.util.IabHelper;
-import com.ericz.stockfinder.util.IabResult;
 import com.ericz.stockfinder.util.Purchase;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -38,8 +29,6 @@ import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
 public class MainActivity extends AppCompatActivity {
 
     private Spinner percentSpinner;
@@ -53,19 +42,20 @@ public class MainActivity extends AppCompatActivity {
     private Spinner stockExchangeSpinner;
     private Spinner debtEquitySpinner;
     private ProgressDialog progressDialog;
+    private Spinner profitSpinner;
+    private Spinner priceToBookSpinner;
 
     private boolean paid;
-    private static final String TAG = "inappbilling";
-    IabHelper mHelper;
-    static final String ITEM_SKU = "android.test.purchased";
-
-
 
     IInAppBillingService mService;
 
+
+
     ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
-        public void onServiceDisconnected(ComponentName name) {
+        public void onServiceDisconnected(ComponentName name)
+        {
+
             mService = null;
         }
 
@@ -73,39 +63,36 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name,
                                        IBinder service) {
             mService = IInAppBillingService.Stub.asInterface(service);
+
+            Log.v("mServiceConn", "connected!");
+            testPaid(mService);
         }
     };
-    
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences.Editor editor;
-        SharedPreferences sharedPreferences = getSharedPreferences("name", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+        SharedPreferences sharedPreferences = getSharedPreferences("preferences", MODE_APPEND);
+        paid = sharedPreferences.getBoolean("paid", false);
+
+        Intent serviceIntent =
+                new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
 
 
-        sharedPreferences.getBoolean("firstTime", true);
 
-        if (sharedPreferences.getBoolean("firstTime", true))
-        {
-            Dialog dialog = new Dialog(this);
-            dialog.setContentView(R.layout.changelayout);
-            dialog.show();
-        }
-
-        editor.putBoolean("firstTime", false);
+        Log.v("device number test",
+                Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                        Settings.Secure.ANDROID_ID));
 
 
-
-        Intent intent = new Intent(MainActivity.this, SubscriptionMain.class);
-        AdView adView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-
-
+        priceToBookSpinner = (Spinner) findViewById(R.id.pricetobook);
         percentSpinner = (Spinner) findViewById(R.id.percentSpinner);
         volumeSpinner = (Spinner) findViewById(R.id.volumeSpinner);
         sectorSpinner = (Spinner) findViewById(R.id.sectorSpinner);
@@ -115,113 +102,85 @@ public class MainActivity extends AppCompatActivity {
         priceSpinner = (Spinner) findViewById(R.id.priceSpinner);
         stockExchangeSpinner = (Spinner) findViewById(R.id.exchangeSpinner);
         debtEquitySpinner = (Spinner) findViewById(R.id.debtEquitySpinner);
-
+        profitSpinner = (Spinner) findViewById(R.id.profitSpinner);
         super.onStart();
-        String base64EncodedPublicKey =
-                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiraN/vkkv3xD9dcqPwYC6wdzaO/WD9A9pHm4X7Tg2v1oEZd+1dWQM9eOjTA++00LW3cOKzlBg/g0Py+YCAi5NVOgzHvDhlsgkPu4a7WIIsNJdygYv0L04+0XLH0+9J4oL9A0JD+CZ58HJCo8rndCo/6XTiUEw9pkX/lPx7VCEIFnvChtXAuPg1VEW7dSTo0JfT3wzpGyiwrAZ51YJ6wNdqNR2t8xaRp+zs90wGO4z/cHI/MUR6zOWX1k0xu+tSOyAN8VuRQDjGwF4mk/nDe7+5LQG1QjJUMFvx7bixodUwMWJlgGkyn/uxdUPemK3IDeBVTVaWZMvL8/9xGa5OSzlwIDAQAB";
-
-        mHelper = new IabHelper(this, base64EncodedPublicKey);
-
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                    Log.d(TAG, "In-app Billing setup failed: " +
-                            result);
-                } else {
-                    Log.d(TAG, "In-app Billing is set up OK");
-                }
-            }
-        });
-
-
     }
 
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mHelper != null) try {
-            mHelper.dispose();
-        } catch (IabHelper.IabAsyncInProgressException e) {
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
+    }
+
+    @SuppressLint("HardwareIds")
+    public void testPaid(IInAppBillingService service)
+    {
+
+        try {
+
+            Bundle ownedItems = mService.getPurchases(3, getPackageName(), "subs", null);
+            Log.v("Bundle test", ownedItems.toString());
+
+            int response = ownedItems.getInt("RESPONSE_CODE");
+            if (response == 0) {
+                ArrayList<String> ownedSkus =
+                        ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
+                ArrayList<String>  purchaseDataList =
+                        ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+                ArrayList<String>  signatureList =
+                        ownedItems.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
+                String continuationToken =
+                        ownedItems.getString("INAPP_CONTINUATION_TOKEN");
+
+
+                if (ownedSkus.contains("psaximosubscription"))
+                {
+                    Log.v("subscription", "owned!");
+                    this.paid = true;
+
+                    //app proceeds with function
+                }
+                else
+                {
+
+                    if(Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0") )
+                    {
+                        Log.v("device number", "erics device");
+                    }
+                    else
+                    {
+                        Log.v("subscription", "not owned");
+                        //there is no subscription, so the app starts the purchase page
+                        Intent buyIntent = new Intent(this, PurchaseActivity.class);
+                        startActivity(buyIntent);
+
+                    }
+
+                }
+
+
+                // if continuationToken != null, call getPurchases again
+                // and pass in the token to retrieve more items
+            }
+
+
+
+        } catch (RemoteException e) {
             e.printStackTrace();
+
+
         }
-        mHelper = null;
-
-
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
-
-        if (resultCode == 0)
-        {
-            paid = true;
-        }
-        else {
-            paid = false;
-        }
-        stocks(new View(getApplicationContext()));
-
-        // Pass on the activity result to the helper for handling
-        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
-            // not handled, so handle it ourselves (here's where you'd
-            // perform any handling of activity results not related to in-app
-            // billing...
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-        else
-        {
-            Log.d(TAG, "onActivityResult handled by IABUtil.");
-        }
-    }
-
-
-
-    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
-            = new IabHelper.OnIabPurchaseFinishedListener() {
-        public void onIabPurchaseFinished(IabResult result,
-                                          Purchase purchase)
-        {
-            if (result.isFailure()) {
-                // Handle error
-                paid = false;
-
-                return;
-            }
-            else if (purchase.getSku().equals(ITEM_SKU)) {
-                Log.v("SUCCESS", "SUCCESS!!!!!!!!!!!");
-                paid = true;
-            }
-
-        }
-    };
 
 
     public void stocks(View view)
     {
-
-        try
-        {
-            mHelper.launchSubscriptionPurchaseFlow(this, ITEM_SKU, 10001,
-                    mPurchaseFinishedListener, "mypurchasetoken");
-        }
-
-
-        catch (IabHelper.IabAsyncInProgressException e)
-        {
-            e.printStackTrace();
-        }
-
-        if (paid)
-        {
             String percentString = percentSpinner.getSelectedItem().toString();
             String volumeString = volumeSpinner.getSelectedItem().toString();
             int sector = sectorSpinner.getSelectedItemPosition();
@@ -310,10 +269,6 @@ public class MainActivity extends AppCompatActivity {
                 sectorString = ",sic~gte~9900,sic~lte~9999";
             }
 
-            if (sector ==12)
-            {
-
-            }
             String price = priceSpinner.getSelectedItem().toString();
 
             if (price.equals("Any"))
@@ -413,11 +368,55 @@ public class MainActivity extends AppCompatActivity {
                 exchange = ",stock_exchange~contains~NASDAQ";
             }
 
+            String profitMargin = profitSpinner.getSelectedItem().toString();
+            if (profitMargin.equals("Any") )
+            {
+                profitMargin = "";
+            }
+            if (profitMargin.equals( "+5%"))
+            {
+                profitMargin = ",profitmargin~gte~5e-2";
+            }
+            if (profitMargin.equals("+10%") )
+            {
+                profitMargin = ",profitmargin~gte~10e-2";
+            }
+            if (profitMargin.equals( "+20%"))
+            {
+                profitMargin = ",profitmargin~gte~20e-2";
+            }
+            if (profitMargin.equals( "+30%"))
+            {
+                profitMargin = ",profitmargin~gte~30e-2";
+            }
+            String priceToBook = priceToBookSpinner.getSelectedItem().toString();
+            if (priceToBook.equals("Any"))
+            {
+                priceToBook = "";
+            }
+            if (priceToBook.equals("0 - 1"))
+            {
+                priceToBook = ",pricetobook~lte~1";
+            }
+            if (priceToBook.equals("1 - 2"))
+            {
+                priceToBook = ",pricetobook~lte~2,pricetobook~gte~1";
+            }
+            if (priceToBook.equals("2 - 3"))
+            {
+                priceToBook = ",pricetobook~lte3,pricetobook~gte~2";
+            }
+            if (priceToBook.equals("3 and up"))
+            {
+                priceToBook = ",pricetobook~gte~3";
+            }
 
-            String finalString =
+
+
+        String finalString =
                     "https://api.intrinio.com/securities/search?conditions="
                             + percentString + marketcapString + volumeString + sectorString
-                            + eps + price + peratio + debtEquity + exchange + ",name~gte~0";
+                            + eps + price + peratio + debtEquity + exchange + profitMargin + priceToBook +  ",name~gte~0";
 
 
             Log.v("String Test", finalString);
@@ -437,10 +436,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
-
-
-    }
 
     public class Getdata extends AsyncTask<String, String, String>
     {

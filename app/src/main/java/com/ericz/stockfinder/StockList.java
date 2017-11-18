@@ -33,7 +33,6 @@ public class StockList extends ArrayAdapter<String> {
     private JSONArray stocks;
     private Activity context;
     private String sicCode;
-    private InterstitialAd mInterstitialAd;
 
 
     public StockList(Context context, JSONArray stocks) {
@@ -43,9 +42,6 @@ public class StockList extends ArrayAdapter<String> {
 
 
 
-        mInterstitialAd = new InterstitialAd(getContext());
-        mInterstitialAd.setAdUnitId("ca-app-pub-4430034146252858/3454610969");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
     }
 
@@ -136,10 +132,6 @@ public class StockList extends ArrayAdapter<String> {
 
                     getContext().startActivity(intent);
 
-                    if (mInterstitialAd.isLoaded())
-                    {
-                        mInterstitialAd.show();
-                    }
                 }
             });
 
