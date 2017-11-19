@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 {
 
                     if(Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0") )
+                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0       ") )
                     {
                         Log.v("device number", "erics device");
                     }
@@ -155,13 +155,12 @@ public class MainActivity extends AppCompatActivity {
                     {
                         Log.v("subscription", "not owned");
                         //there is no subscription, so the app starts the purchase page
-                        Intent buyIntent = new Intent(this, PurchaseActivity.class);
-                        startActivity(buyIntent);
+                            Intent buyIntent = new Intent(this, PurchaseActivity.class);
+                            startActivity(buyIntent);
 
                     }
 
                 }
-
 
                 // if continuationToken != null, call getPurchases again
                 // and pass in the token to retrieve more items
@@ -176,6 +175,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    public void makePurchase()
+    {
+
+
+    }
+
 
 
 
@@ -413,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String finalString =
+            String finalString =
                     "https://api.intrinio.com/securities/search?conditions="
                             + percentString + marketcapString + volumeString + sectorString
                             + eps + price + peratio + debtEquity + exchange + profitMargin + priceToBook +  ",name~gte~0";

@@ -38,11 +38,14 @@ public class PurchaseActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("preferences", MODE_APPEND);
 
+        this.setFinishOnTouchOutside(false);
+
 
         Button button = (Button) findViewById(R.id.subbutton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 try
                 {
                     mHelper.launchSubscriptionPurchaseFlow(PurchaseActivity.this, ITEM_SKU, 10001,
@@ -53,17 +56,12 @@ public class PurchaseActivity extends AppCompatActivity {
                 {
                     e.printStackTrace();
                 }
+
             }
         });
 
-        Button trysearches = (Button) findViewById(R.id.trysearches);
-        trysearches.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                finishThisActivity();
-            }
-        });
+
+
 
 
 
@@ -80,9 +78,28 @@ public class PurchaseActivity extends AppCompatActivity {
                             result);
                 } else {
                     Log.d(TAG, "In-app Billing is set up OK");
+
+                    try
+                    {
+                        mHelper.launchSubscriptionPurchaseFlow(PurchaseActivity.this, ITEM_SKU, 10001,
+                                mPurchaseFinishedListener, "mypurchasetoken");
+                    }
+
+                    catch (IabHelper.IabAsyncInProgressException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
+
+
+
+
+
+
+
+
 
     }
 

@@ -19,6 +19,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
@@ -27,20 +28,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SubscriptionMain"></activity>
+        <activity android:name=".SubscriptionMain">
+
+        </activity>
         <activity
+            android:screenOrientation="portrait"
+
             android:name=".StockActivity"
-            android:launchMode="singleTop"></activity>
-        <activity android:name=".ResultsActivity">
+            android:launchMode="singleTop">
+
+        </activity>
+        <activity android:name=".ResultsActivity"
+            android:screenOrientation="portrait"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ericz.stockfinder.MainActivity"></meta-data>
+                android:value="com.ericz.stockfinder.MainActivity">
+
+            </meta-data>
+
         </activity>
 
-        <activity android:name=".PurchaseActivity">
+        <activity android:name=".PurchaseActivity"
+            android:screenOrientation="portrait"
+
+            android:theme="@style/Theme.AppCompat.DayNight.Dialog">
 
         </activity>
         <activity
+            android:screenOrientation="portrait"
+
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
     </application>
