@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -19,10 +20,11 @@ import com.ericz.stockfinder.util.Purchase;
 
 public class PurchaseActivity extends AppCompatActivity {
 
-    private boolean paid;
+    private int searchesleft;
     private static final String TAG = "inappbilling";
     IabHelper mHelper;
     static final String ITEM_SKU = "psaximosubscription";
+
 
     private IInAppBillingService mService;
     private void finishThisActivity()
@@ -37,6 +39,11 @@ public class PurchaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_purchase);
 
         sharedPreferences = getSharedPreferences("preferences", MODE_APPEND);
+
+        this.searchesleft = sharedPreferences.getInt("paid", 5);
+
+
+
 
         this.setFinishOnTouchOutside(false);
 
@@ -57,6 +64,18 @@ public class PurchaseActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+            }
+        });
+
+        TextView freeSearch = (TextView) findViewById(R.id.trysearchestext);
+        freeSearch.setText("Or, try " + sharedPreferences.getInt("paid", 5) + " searches free");
+        freeSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("paid", sharedPreferences.getInt("paid", 5) - 1);
+                finishThisActivity();
             }
         });
 

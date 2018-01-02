@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner profitSpinner;
     private Spinner priceToBookSpinner;
 
-    private boolean paid;
+    private int searchesleft;
 
     IInAppBillingService mService;
 
@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("preferences", MODE_APPEND);
-        paid = sharedPreferences.getBoolean("paid", false);
+        SharedPreferences sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE);
+        searchesleft = sharedPreferences.getInt("paid", 5);
 
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
@@ -139,26 +139,27 @@ public class MainActivity extends AppCompatActivity {
                 if (ownedSkus.contains("psaximosubscription"))
                 {
                     Log.v("subscription", "owned!");
-                    this.paid = true;
-
                     //app proceeds with function
                 }
                 else
                 {
 
                     if(Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0       ") )
+                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0") ||
+                            Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                            Settings.Secure.ANDROID_ID).equals("5fffed1b89366878xxxxxx" ))
                     {
                         Log.v("device number", "erics device");
                     }
-                    else
-                    {
-                        Log.v("subscription", "not owned");
-                        //there is no subscription, so the app starts the purchase page
-                            Intent buyIntent = new Intent(this, PurchaseActivity.class);
-                            startActivity(buyIntent);
-
-                    }
+                    // NO longer forcing open the purchase page
+//                    else
+//                    {
+//                        Log.v("subscription", "not owned");
+//                        //there is no subscription, so the app starts the purchase page
+//                            Intent buyIntent = new Intent(this, PurchaseActivity.class);
+//                            startActivity(buyIntent);
+//
+//                    }
 
                 }
 
