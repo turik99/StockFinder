@@ -127,11 +127,12 @@ public class MainActivity extends AppCompatActivity {
                         ownedItems.getString("INAPP_CONTINUATION_TOKEN");
 
 
-                if (ownedSkus.contains("psaximosubscription"))
+                if (ownedSkus.contains("psaximosubscription") || ownedSkus.contains("psaximoyear"))
                 {
                     Log.v("subscription", "owned!");
                     //app proceeds with function
                 }
+
                 else
                 {
 
