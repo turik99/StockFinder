@@ -24,6 +24,7 @@ public class PurchaseActivity extends AppCompatActivity {
     private static final String TAG = "inappbilling";
     IabHelper mHelper;
     static final String ITEM_SKU = "psaximosubscription";
+    static final String ITEM_SKU_YEAR = "psaximoyear";
 
 
     private IInAppBillingService mService;
@@ -48,7 +49,9 @@ public class PurchaseActivity extends AppCompatActivity {
         this.setFinishOnTouchOutside(false);
 
 
-        Button button = (Button) findViewById(R.id.subbutton);
+        Button button = findViewById(R.id.subbutton);
+
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +70,27 @@ public class PurchaseActivity extends AppCompatActivity {
             }
         });
 
+        Button button1 = findViewById(R.id.yearsubbutton);
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try
+                {
+                    mHelper.launchSubscriptionPurchaseFlow(PurchaseActivity.this, ITEM_SKU_YEAR, 10001,
+                            mPurchaseFinishedListener, "mypurchasetoken");
+                }
+
+                catch (IabHelper.IabAsyncInProgressException e)
+                {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
+
 
 
 
@@ -84,16 +108,18 @@ public class PurchaseActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "In-app Billing is set up OK");
 
-                    try
-                    {
-                        mHelper.launchSubscriptionPurchaseFlow(PurchaseActivity.this, ITEM_SKU, 10001,
-                                mPurchaseFinishedListener, "mypurchasetoken");
-                    }
-
-                    catch (IabHelper.IabAsyncInProgressException e)
-                    {
-                        e.printStackTrace();
-                    }
+                    //THIS CODE BELOW FORCED A PURCHASE PAGE OPEN
+//
+//                    try
+//                    {
+//                        mHelper.launchSubscriptionPurchaseFlow(PurchaseActivity.this, ITEM_SKU, 10001,
+//                                mPurchaseFinishedListener, "mypurchasetoken");
+//                    }
+//
+//                    catch (IabHelper.IabAsyncInProgressException e)
+//                    {
+//                        e.printStackTrace();
+//                    }
                 }
             }
         });
