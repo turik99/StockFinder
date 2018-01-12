@@ -45,17 +45,12 @@ public class MainActivity extends AppCompatActivity {
     private Spinner profitSpinner;
     private Spinner priceToBookSpinner;
 
-    private int searchesleft;
-
     IInAppBillingService mService;
-
-
 
     ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name)
         {
-
             mService = null;
         }
 
@@ -74,10 +69,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE);
-        searchesleft = sharedPreferences.getInt("paid", 5);
-
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
@@ -151,15 +142,14 @@ public class MainActivity extends AppCompatActivity {
                     {
                         Log.v("device number", "erics device");
                     }
-                    // NO longer forcing open the purchase page
-//                    else
-//                    {
-//                        Log.v("subscription", "not owned");
-//                        //there is no subscription, so the app starts the purchase page
-//                            Intent buyIntent = new Intent(this, PurchaseActivity.class);
-//                            startActivity(buyIntent);
-//
-//                    }
+                    else
+                    {
+                        Log.v("subscription", "not owned");
+                        //there is no subscription, so the app starts the purchase page
+                            Intent buyIntent = new Intent(this, PurchaseActivity.class);
+                            startActivity(buyIntent);
+
+                    }
 
                 }
 

@@ -38,7 +38,7 @@ public class PurchaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase);
 
-        sharedPreferences = getSharedPreferences("preferences", MODE_APPEND);
+        sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE);
 
         this.searchesleft = sharedPreferences.getInt("paid", 5);
 
@@ -66,20 +66,6 @@ public class PurchaseActivity extends AppCompatActivity {
 
             }
         });
-
-        TextView freeSearch = (TextView) findViewById(R.id.trysearchestext);
-        freeSearch.setText("Or, try " + sharedPreferences.getInt("paid", 5) + " searches free");
-        freeSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("paid", sharedPreferences.getInt("paid", 5) - 1);
-                finishThisActivity();
-            }
-        });
-
-
 
 
 
