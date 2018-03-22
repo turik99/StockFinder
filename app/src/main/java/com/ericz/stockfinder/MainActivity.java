@@ -1,6 +1,8 @@
 package com.ericz.stockfinder;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -49,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
-        public void onServiceDisconnected(ComponentName name)
-        {
+        public void onServiceDisconnected(ComponentName name) {
             mService = null;
         }
 
@@ -76,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
 
-
-
         Log.v("device number test",
                 Settings.Secure.getString(getApplicationContext().getContentResolver(),
                         Settings.Secure.ANDROID_ID));
@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         debtEquitySpinner = (Spinner) findViewById(R.id.debtEquitySpinner);
         profitSpinner = (Spinner) findViewById(R.id.profitSpinner);
         super.onStart();
+
+
     }
 
 
@@ -107,8 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("HardwareIds")
-    public void testPaid(IInAppBillingService service)
-    {
+    public void testPaid(IInAppBillingService service) {
 
         try {
 
@@ -119,36 +120,29 @@ public class MainActivity extends AppCompatActivity {
             if (response == 0) {
                 ArrayList<String> ownedSkus =
                         ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
-                ArrayList<String>  purchaseDataList =
+                ArrayList<String> purchaseDataList =
                         ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-                ArrayList<String>  signatureList =
+                ArrayList<String> signatureList =
                         ownedItems.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
                 String continuationToken =
                         ownedItems.getString("INAPP_CONTINUATION_TOKEN");
 
 
-                if (ownedSkus.contains("psaximosubscription") || ownedSkus.contains("psaximoyear"))
-                {
+                if (ownedSkus.contains("psaximosubscription") || ownedSkus.contains("psaximoyear")) {
                     Log.v("subscription", "owned!");
                     //app proceeds with function
-                }
+                } else {
 
-                else
-                {
-
-                    if(Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0") ||
+                    if (Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0xxxxx") ||
                             Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                            Settings.Secure.ANDROID_ID).equals("5fffed1b89366878" ))
-                    {
+                                    Settings.Secure.ANDROID_ID).equals("5fffed1b89366878")) {
                         Log.v("device number", "erics device");
-                    }
-                    else
-                    {
+                    } else {
                         Log.v("subscription", "not owned");
                         //there is no subscription, so the app starts the purchase page
-                            Intent buyIntent = new Intent(this, PurchaseActivity.class);
-                            startActivity(buyIntent);
+                        Intent buyIntent = new Intent(this, PurchaseActivity.class);
+                        startActivity(buyIntent);
 
                     }
 
@@ -159,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
         } catch (RemoteException e) {
             e.printStackTrace();
 
@@ -168,272 +161,247 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void makePurchase()
-    {
+    public void makePurchase() {
 
 
     }
 
 
+    public void stocks(View view) {
+        String percentString = percentSpinner.getSelectedItem().toString();
+        String volumeString = volumeSpinner.getSelectedItem().toString();
+        int sector = sectorSpinner.getSelectedItemPosition();
+        String marketcapString = marketcapSpinner.getSelectedItem().toString();
 
-
-    public void stocks(View view)
-    {
-            String percentString = percentSpinner.getSelectedItem().toString();
-            String volumeString = volumeSpinner.getSelectedItem().toString();
-            int sector = sectorSpinner.getSelectedItemPosition();
-            String marketcapString = marketcapSpinner.getSelectedItem().toString();
-
-            String sectorString = "";
-            if (percentString.equals("Any") ){
-                percentString = "percent_change~gte~-100";}
-            if (percentString.equals( "+5%")){
-                percentString = "percent_change~gte~5e-2";}
-            if (percentString.equals("+10%") ){
-                percentString = "percent_change~gte~10e-2";}
-            if (percentString.equals( "+15%")){
-                percentString = "percent_change~gte~15e-2";}
-
-            if (volumeString.equals("Any") ){
-                volumeString = ",adj_volume~gte~0";}
-            if (volumeString.equals( "low: 0-100k")){
-                volumeString = ",adj_volume~lte~100000";}
-            if (volumeString.equals("med 100k-1m") ){
-                volumeString = ",adj_volume~gte~100000";}
-            if (volumeString.equals("high 1m up") ){
-                volumeString = ",adj_volume~gte~1000000";}
-
-            if (marketcapString.equals("Any") ){
-                marketcapString = "";}
-            if (marketcapString.equals("0 - 100m") ){
-                marketcapString = ",marketcap~lte~100e6";}
-            if (marketcapString .equals("100m - 1b") ){
-                marketcapString = ",marketcap~gte~1e8,marketcap~lt~1e9";}
-            if (marketcapString.equals("1b - 10b") ){
-                marketcapString = ",marketcap~gte~1e9,marketcap~lt~10e9";}
-            if (marketcapString.equals("10b - 100b")){
-                marketcapString = ",marketcap~gte~10e9,marketcap~lt~100e9";}
-            if (marketcapString.equals("100b and up")){
-                marketcapString = ",marketcap~gte~100e9";}
-
-            if (sector == 0)
-            {
-                sectorString = ",sic~gte~0000";
-            }
-            if(sector == 1)
-            {
-                sectorString = ",sic~gte~0100,sic~lte~0999";
-            }
-            if (sector == 2)
-            {
-                sectorString = ",sic~gte~1000,sic~lte~1499";
-            }
-            if (sector == 3){
-                sectorString = ",sic~gte~1500,sic~lte~1799";
-            }
-            if (sector ==4)
-            {
-                sectorString= ",sic~gte~2000,sic~lte~3999";
-            }
-
-            if(sector == 5)
-            {
-                sectorString = ",sic~gte~4000,sic~lte~4999";
-            }
-
-            if (sector == 6)
-            {
-                sectorString = ",sic~gte~5000,sic~lte~5199";
-            }
-            if(sector == 7)
-            {
-                sectorString = ",sic~gte~5200,sic~lte~5999";
-            }
-
-            if (sector == 8)
-            {
-                sectorString = ",sic~gte~6000,sic~lte~6799";
-            }
-            if (sector == 9)
-            {
-                sectorString = ",sic~gte~7000,sic~lte~8999";
-            }
-            if (sector == 10)
-            {
-                sectorString = ",sic~eq~3674";
-            }
-            if (sector == 11)
-            {
-                sectorString = ",sic~gte~9900,sic~lte~9999";
-            }
-
-            String price = priceSpinner.getSelectedItem().toString();
-
-            if (price.equals("Any"))
-            {
-                price = ",close_price~gte~0.00";
-            }
-            if (price.equals("$0 to $1"))
-            {
-                price = ",close_price~lte~1";
-            }
-            if (price.equals("$1 to $5"))
-            {
-                price = ",close_price~gte~1,close_price~lte~5";
-            }
-
-            if (price.equals("$5 to $20") )
-            {
-                price = ",close_price~gte~5,close_price~lte~20";
-            }
-            if (price.equals("$20 to $100"))
-            {
-                price = ",close_price~gte~20.00,close_price~lte~100.00";
-            }
-            if (price.equals("$100 to $200"))
-            {
-                price = ",close_price~gte~100.00,close_price~lte~200.00";
-            }
-            if (price.equals("200$ and up"))
-            {
-                price = ",close_price~gte~200.00";
-            }
-
-            String eps = epsSpinner.getSelectedItem().toString();
-            if (eps.equals("Any"))
-            {
-                eps = "";
-            }
-            if(eps.equals("0 - 1$"))
-            {
-                eps = ",cashdividendspershare~gte~1.00";
-            }
-            if(eps.equals("1 - 5$"))
-            {
-                eps = ",cashdividendspershare~lte~5.00,cashdividendspershare~gt~1.00";
-
-            }
-            if(eps.equals("5$ and up"))
-            {
-                eps = ",cashdividendspershare~gte~5.00";
-            }
-
-            String peratio = peratioSpinner.getSelectedItem().toString();
-
-            if (peratio.equals("Any"))
-            {
-                peratio = ",pricetoearnings~lte~1000";
-            }
-            if(peratio.equals("0 - 15"))
-            {
-                peratio = ",pricetoearnings~gte~0,pricetoearnings~lt~15";
-            }
-            if(peratio.equals("15 - 30"))
-            {
-                peratio = ",pricetoearnings~gte~15,pricetoearnings~lte~30";
-            }
-            if(peratio.equals("30 and up"))
-            {
-                peratio = ",pricetoearnings~gte~30";
-            }
-
-            String debtEquity = debtEquitySpinner.getSelectedItem().toString();
-            if (debtEquity.equals("Any"))
-            {
-                debtEquity = "";
-            }
-            if (debtEquity.equals("High (>.5)"))
-            {
-                debtEquity = ",debttoequity~gte~0.5";
-            }
-            if (debtEquity.equals("Low (<0.1)"))
-            {
-                debtEquity = ",debttoequity~lte~0.1";
-            }
-
-            String exchange = stockExchangeSpinner.getSelectedItem().toString();
-
-            if (exchange.equals("Any"))
-            {
-                exchange = "";
-            }
-            if (exchange.equals("NYSE"))
-            {
-                exchange = ",stock_exchange~contains~NYSE";
-            }
-            if (exchange.equals("NASDAQ"))
-            {
-                exchange = ",stock_exchange~contains~NASDAQ";
-            }
-
-            String profitMargin = profitSpinner.getSelectedItem().toString();
-            if (profitMargin.equals("Any") )
-            {
-                profitMargin = "";
-            }
-            if (profitMargin.equals( "+5%"))
-            {
-                profitMargin = ",profitmargin~gte~5e-2";
-            }
-            if (profitMargin.equals("+10%") )
-            {
-                profitMargin = ",profitmargin~gte~10e-2";
-            }
-            if (profitMargin.equals( "+20%"))
-            {
-                profitMargin = ",profitmargin~gte~20e-2";
-            }
-            if (profitMargin.equals( "+30%"))
-            {
-                profitMargin = ",profitmargin~gte~30e-2";
-            }
-            String priceToBook = priceToBookSpinner.getSelectedItem().toString();
-            if (priceToBook.equals("Any"))
-            {
-                priceToBook = "";
-            }
-            if (priceToBook.equals("0 - 1"))
-            {
-                priceToBook = ",pricetobook~lte~1";
-            }
-            if (priceToBook.equals("1 - 2"))
-            {
-                priceToBook = ",pricetobook~lte~2,pricetobook~gte~1";
-            }
-            if (priceToBook.equals("2 - 3"))
-            {
-                priceToBook = ",pricetobook~lte3,pricetobook~gte~2";
-            }
-            if (priceToBook.equals("3 and up"))
-            {
-                priceToBook = ",pricetobook~gte~3";
-            }
-
-
-
-            String finalString =
-                    "https://api.intrinio.com/securities/search?conditions="
-                            + percentString + marketcapString + volumeString + sectorString
-                            + eps + price + peratio + debtEquity + exchange + profitMargin + priceToBook +  ",name~gte~0";
-
-
-            Log.v("String Test", finalString);
-
-
-
-            Getdata getdata = new Getdata(finalString);
-            try
-            {
-
-                getdata.execute();
-            }
-
-
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+        String sectorString = "";
+        if (percentString.equals("Any")) {
+            percentString = "percent_change~gte~-100";
         }
+        if (percentString.equals("+5%")) {
+            percentString = "percent_change~gte~5e-2";
+        }
+        if (percentString.equals("+10%")) {
+            percentString = "percent_change~gte~10e-2";
+        }
+        if (percentString.equals("+15%")) {
+            percentString = "percent_change~gte~15e-2";
+        }
+
+        if (volumeString.equals("Any")) {
+            volumeString = ",adj_volume~gte~0";
+        }
+        if (volumeString.equals("low: 0-100k")) {
+            volumeString = ",adj_volume~lte~100000";
+        }
+        if (volumeString.equals("med 100k-1m")) {
+            volumeString = ",adj_volume~gte~100000";
+        }
+        if (volumeString.equals("high 1m up")) {
+            volumeString = ",adj_volume~gte~1000000";
+        }
+
+        if (marketcapString.equals("Any")) {
+            marketcapString = "";
+        }
+        if (marketcapString.equals("0 - 100m")) {
+            marketcapString = ",marketcap~lte~100e6";
+        }
+        if (marketcapString.equals("100m - 1b")) {
+            marketcapString = ",marketcap~gte~1e8,marketcap~lt~1e9";
+        }
+        if (marketcapString.equals("1b - 10b")) {
+            marketcapString = ",marketcap~gte~1e9,marketcap~lt~10e9";
+        }
+        if (marketcapString.equals("10b - 100b")) {
+            marketcapString = ",marketcap~gte~10e9,marketcap~lt~100e9";
+        }
+        if (marketcapString.equals("100b and up")) {
+            marketcapString = ",marketcap~gte~100e9";
+        }
+
+        if (sector == 0) {
+            sectorString = ",sic~gte~0000";
+        }
+        if (sector == 1) {
+            sectorString = ",sic~gte~0100,sic~lte~0999";
+        }
+        if (sector == 2) {
+            sectorString = ",sic~gte~1000,sic~lte~1499";
+        }
+        if (sector == 3) {
+            sectorString = ",sic~gte~1500,sic~lte~1799";
+        }
+        if (sector == 4) {
+            sectorString = ",sic~gte~2000,sic~lte~3999";
+        }
+
+        if (sector == 5) {
+            sectorString = ",sic~gte~4000,sic~lte~4999";
+        }
+
+        if (sector == 6) {
+            sectorString = ",sic~gte~5000,sic~lte~5199";
+        }
+        if (sector == 7) {
+            sectorString = ",sic~gte~5200,sic~lte~5999";
+        }
+
+        if (sector == 8) {
+            sectorString = ",sic~gte~6000,sic~lte~6799";
+        }
+        if (sector == 9) {
+            sectorString = ",sic~gte~7000,sic~lte~8999";
+        }
+        if (sector == 10) {
+            sectorString = ",sic~eq~3674";
+        }
+        if (sector == 11) {
+            sectorString = ",sic~gte~9900,sic~lte~9999";
+        }
+
+        String price = priceSpinner.getSelectedItem().toString();
+
+        if (price.equals("Any")) {
+            price = ",close_price~gte~0.00";
+        }
+        if (price.equals("$0 to $1")) {
+            price = ",close_price~lte~1";
+        }
+        if (price.equals("$1 to $5")) {
+            price = ",close_price~gte~1,close_price~lte~5";
+        }
+
+        if (price.equals("$5 to $20")) {
+            price = ",close_price~gte~5,close_price~lte~20";
+        }
+        if (price.equals("$20 to $100")) {
+            price = ",close_price~gte~20.00,close_price~lte~100.00";
+        }
+        if (price.equals("$100 to $200")) {
+            price = ",close_price~gte~100.00,close_price~lte~200.00";
+        }
+        if (price.equals("200$ and up")) {
+            price = ",close_price~gte~200.00";
+        }
+
+        String eps = epsSpinner.getSelectedItem().toString();
+        if (eps.equals("Any")) {
+            eps = "";
+        }
+        if (eps.equals("0 - 1$")) {
+            eps = ",cashdividendspershare~gte~1.00";
+        }
+        if (eps.equals("1 - 5$")) {
+            eps = ",cashdividendspershare~lte~5.00,cashdividendspershare~gt~1.00";
+
+        }
+        if (eps.equals("5$ and up")) {
+            eps = ",cashdividendspershare~gte~5.00";
+        }
+
+        String peratio = peratioSpinner.getSelectedItem().toString();
+
+        if (peratio.equals("Any")) {
+            peratio = ",pricetoearnings~lte~1000";
+        }
+        if (peratio.equals("0 - 15")) {
+            peratio = ",pricetoearnings~gte~0,pricetoearnings~lt~15";
+        }
+        if (peratio.equals("15 - 30")) {
+            peratio = ",pricetoearnings~gte~15,pricetoearnings~lte~30";
+        }
+        if (peratio.equals("30 and up")) {
+            peratio = ",pricetoearnings~gte~30";
+        }
+
+        String debtEquity = debtEquitySpinner.getSelectedItem().toString();
+        if (debtEquity.equals("Any")) {
+            debtEquity = "";
+        }
+        if (debtEquity.equals("High (>.5)")) {
+            debtEquity = ",debttoequity~gte~0.5";
+        }
+        if (debtEquity.equals("Low (<0.1)")) {
+            debtEquity = ",debttoequity~lte~0.1";
+        }
+
+        String exchange = stockExchangeSpinner.getSelectedItem().toString();
+
+        if (exchange.equals("Any")) {
+            exchange = "";
+        }
+        if (exchange.equals("NYSE")) {
+            exchange = ",stock_exchange~contains~NYSE";
+        }
+        if (exchange.equals("NASDAQ")) {
+            exchange = ",stock_exchange~contains~NASDAQ";
+        }
+
+        String profitMargin = profitSpinner.getSelectedItem().toString();
+        if (profitMargin.equals("Any")) {
+            profitMargin = "";
+        }
+        if (profitMargin.equals("+5%")) {
+            profitMargin = ",profitmargin~gte~5e-2";
+        }
+        if (profitMargin.equals("+10%")) {
+            profitMargin = ",profitmargin~gte~10e-2";
+        }
+        if (profitMargin.equals("+20%")) {
+            profitMargin = ",profitmargin~gte~20e-2";
+        }
+        if (profitMargin.equals("+30%")) {
+            profitMargin = ",profitmargin~gte~30e-2";
+        }
+        String priceToBook = priceToBookSpinner.getSelectedItem().toString();
+        if (priceToBook.equals("Any")) {
+            priceToBook = "";
+        }
+        if (priceToBook.equals("0 - 1")) {
+            priceToBook = ",pricetobook~lte~1";
+        }
+        if (priceToBook.equals("1 - 2")) {
+            priceToBook = ",pricetobook~lte~2,pricetobook~gte~1";
+        }
+        if (priceToBook.equals("2 - 3")) {
+            priceToBook = ",pricetobook~lte3,pricetobook~gte~2";
+        }
+        if (priceToBook.equals("3 and up")) {
+            priceToBook = ",pricetobook~gte~3";
+        }
+
+
+        String finalString =
+                "https://api.intrinio.com/securities/search?conditions="
+                        + percentString + marketcapString + volumeString + sectorString
+                        + eps + price + peratio + debtEquity + exchange + profitMargin + priceToBook + ",name~gte~0";
+
+
+        Log.v("String Test", finalString);
+
+
+        Getdata getdata = new Getdata(finalString);
+        try {
+
+            getdata.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void announcment(View view)
+    {
+
+        AlertDialog.Builder dialogbuilder = new AlertDialog.Builder(MainActivity.this);
+        dialogbuilder.setMessage("Unfortunately, due to the cost of data required to support Psaximo," +
+                "the service will be ending on February 4th 2018. At that date " +
+                "all ongoing subscriptions will be canceled. If you'd like a refund feel free to " +
+                "email me at eric.zaba@gmail.com");
+
+        dialogbuilder.setCancelable(true);
+        dialogbuilder.show();
+
+    }
 
     public class Getdata extends AsyncTask<String, String, String>
     {

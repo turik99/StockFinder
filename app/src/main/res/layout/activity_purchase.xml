@@ -46,24 +46,34 @@
         app:layout_constraintStart_toEndOf="@+id/subbutton"
         app:layout_constraintTop_toTopOf="@+id/subbutton" />
 
+    <TextView
+        android:id="@+id/textView38"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="$1.99 USD a month"
+        app:layout_constraintEnd_toEndOf="@+id/textView32"
+        app:layout_constraintTop_toBottomOf="@+id/textView32" />
+
     <Button
-        android:id="@+id/yearsubbutton"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:background="#0F9D58"
+
+        android:id="@+id/yearsubbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:background="#0F9D58"
-        android:text="Subscribe"
+        android:layout_marginTop="8dp"
+        android:text="Button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/subbutton" />
 
     <TextView
-        android:id="@+id/textView34"
+        android:id="@+id/text20983"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Annual payment"
+        android:text="Yearly payment"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toEndOf="@+id/yearsubbutton"
         app:layout_constraintTop_toTopOf="@+id/yearsubbutton" />
@@ -73,17 +83,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="$9.99 a year"
-        app:layout_constraintEnd_toEndOf="@+id/textView34"
-        app:layout_constraintTop_toBottomOf="@+id/textView34" />
-
-    <TextView
-        android:id="@+id/textView38"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="$1.99 a month"
-        app:layout_constraintEnd_toEndOf="@+id/textView32"
-        app:layout_constraintTop_toBottomOf="@+id/textView32" />
+        android:text="$9.99 USD a year"
+        app:layout_constraintEnd_toEndOf="@+id/text20983"
+        app:layout_constraintTop_toBottomOf="@+id/text20983" />
 
 </android.support.constraint.ConstraintLayout>

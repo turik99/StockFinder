@@ -70,6 +70,7 @@ public class PurchaseActivity extends AppCompatActivity {
             }
         });
 
+
         Button button1 = findViewById(R.id.yearsubbutton);
 
         button1.setOnClickListener(new View.OnClickListener() {
