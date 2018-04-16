@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                     if (Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0xxxxx") ||
+                            Settings.Secure.ANDROID_ID).equals("f5c9bbebd5305df0") ||
                             Settings.Secure.getString(getApplicationContext().getContentResolver(),
                                     Settings.Secure.ANDROID_ID).equals("5fffed1b89366878")) {
                         Log.v("device number", "erics device");

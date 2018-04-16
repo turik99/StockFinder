@@ -1,5 +1,10 @@
 package com.ericz.stockfinder;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -173,6 +178,51 @@ public class StockActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    protected void stockVote(View view)
+    {
+        final String appPackageName = "com.ericz.stockvote"; // getPackageName() from Context or Activity object
+
+
+        try
+        {
+            openApp(getApplicationContext(), appPackageName);
+        }
+        catch (Exception e)
+        {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+
+        }
+
+    }
+
+
+
+
+    /** Open another app.
+     * @param context current Context, like Activity, App, or Service
+     * @param packageName the full package name of the app to open
+     * @return true if likely successful, false if unsuccessful
+     */
+    public static boolean openApp(Context context, String packageName) {
+        PackageManager manager = context.getPackageManager();
+        try {
+            Intent i = manager.getLaunchIntentForPackage(packageName);
+            if (i == null) {
+                return false;
+                //throw new ActivityNotFoundException();
+            }
+            i.addCategory(Intent.CATEGORY_LAUNCHER);
+            context.startActivity(i);
+            return true;
+        } catch (ActivityNotFoundException e) {
+            return false;
+        }
     }
 
 }
