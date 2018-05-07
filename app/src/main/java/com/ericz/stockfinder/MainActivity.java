@@ -24,6 +24,10 @@ import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.ericz.stockfinder.util.Purchase;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 
 import org.json.JSONObject;
 import org.jsoup.HttpStatusException;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Spinner profitSpinner;
     private Spinner priceToBookSpinner;
+    private InterstitialAd mInterstitialAd;
 
     IInAppBillingService mService;
 
@@ -96,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
         profitSpinner = (Spinner) findViewById(R.id.profitSpinner);
         super.onStart();
 
+        MobileAds.initialize(this,
+                "ca-app-pub-3940256099942544~3347511713");
+
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.loadAd(adRequest);
+
 
     }
 
@@ -141,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Log.v("subscription", "not owned");
                         //there is no subscription, so the app starts the purchase page
-                        Intent buyIntent = new Intent(this, PurchaseActivity.class);
-                        startActivity(buyIntent);
+//                        Intent buyIntent = new Intent(this, PurchaseActivity.class);
+//                        startActivity(buyIntent);
 
                     }
 
@@ -380,11 +395,24 @@ public class MainActivity extends AppCompatActivity {
         Log.v("String Test", finalString);
 
 
-        Getdata getdata = new Getdata(finalString);
-        try {
 
+        if (mInterstitialAd.isLoaded())
+        {
+            mInterstitialAd.show();
+        }
+        else
+        {
+            Log.v("Ads", "Interstitial not loaded");
+        }
+
+
+        Getdata getdata = new Getdata(finalString);
+        try
+        {
             getdata.execute();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
