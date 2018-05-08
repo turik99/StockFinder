@@ -29,6 +29,7 @@ import java.util.ArrayList;
  */
 
 public class StockList extends ArrayAdapter<String> {
+    private InterstitialAd mInterstitialAd;
 
     private JSONArray stocks;
     private Activity context;
@@ -39,6 +40,11 @@ public class StockList extends ArrayAdapter<String> {
         super(context, R.layout.stock_list_single);
         this.context = (Activity) context;
         this.stocks = stocks;
+
+        mInterstitialAd = new InterstitialAd(getContext());
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
 
 
@@ -126,6 +132,13 @@ public class StockList extends ArrayAdapter<String> {
                 @Override
                 public void onClick(View v)
                 {
+
+                                      if (mInterstitialAd.isLoaded())
+                                      {
+                                                    mInterstitialAd.show();
+                                 }
+
+
                     Intent intent = new Intent(getContext(), StockActivity.class);
                     intent.putExtra("object", stockString);
                     intent.putExtra("sector", sector);
