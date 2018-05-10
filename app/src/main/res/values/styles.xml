@@ -15,7 +15,7 @@
 
     </style>
 
-    <style name="PsaximoTheme" parent="Theme.AppCompat.NoActionBar" >
+    <style name="PsaximoTheme" parent="Theme.AppCompat" >
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@android:color/primary_text_dark</item>

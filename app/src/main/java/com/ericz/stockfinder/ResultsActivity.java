@@ -16,12 +16,10 @@ public class ResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
-        AdRequest adRequest = new AdRequest.Builder().build();
-
 
 
         String dataString = getIntent().getStringExtra("data string");
-        ListView listView = (ListView) findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.listView);
 
         listView.bringToFront();
 
@@ -42,5 +40,8 @@ public class ResultsActivity extends AppCompatActivity {
 
 
     }
+
+
+
 
 }

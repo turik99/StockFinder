@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AdView adView = (AdView) findViewById(R.id.adView);
+        adView.loadAd(new AdRequest.Builder().build());
+
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
@@ -389,16 +392,6 @@ public class MainActivity extends AppCompatActivity {
 
         Log.v("String Test", finalString);
 
-
-
-        if (mInterstitialAd.isLoaded())
-        {
-            mInterstitialAd.show();
-        }
-        else
-        {
-            Log.v("Ads", "Interstitial not loaded");
-        }
 
 
         Getdata getdata = new Getdata(finalString);
