@@ -35,15 +35,18 @@ public class StockActivity extends AppCompatActivity {
             stock = new JSONObject(getIntent().getStringExtra("object"));
             Log.v("objet test", getIntent().getStringExtra("object"));
             TextView volume = (TextView) findViewById(R.id.volumeTextStock);
-            volume.setText("Volume: " + stock.get("adj_volume").toString());
+            volume.setText(stock.get("adj_volume").toString());
             final CardView card = (CardView) findViewById(R.id.descriptionCardView);
             TextView peratio = (TextView) findViewById(R.id.peRatioTextStock);
-            peratio.setText("P/E Ratio: " + stock.get("pricetoearnings").toString());
-            TextView ticker = (TextView) findViewById(R.id.tickerTextStock);
-            ticker.setText(stock.getString("name"));
+            peratio.setText(stock.get("pricetoearnings").toString());
+
+            TextView name = (TextView) findViewById(R.id.stockNameActivity);
+            name.setText(stock.getString("name"));
+            TextView ticker = findViewById(R.id.tickerTextStock);
+            ticker.setText(stock.getString("ticker"));
             TextView sector = (TextView) findViewById(R.id.sectorTextStock);
-            sector.setText("Sector: " + getIntent().getStringExtra("sector"));
-            final TextView descriptionText = (TextView) findViewById(R.id.descriptionText);
+            sector.setText(getIntent().getStringExtra("sector"));
+            final TextView descriptionText = (TextView) findViewById(R.id.aboutText);
             String html = "<!-- TradingView Widget BEGIN -->\n" +
                     "<script type=\"text/javascript\" src=\"https://d33t3vvu2t2yu5.cloudfront.net/tv.js\"></script>\n" +
                     "<script type=\"text/javascript\">\n" +
@@ -85,27 +88,6 @@ public class StockActivity extends AppCompatActivity {
 
             ScrollView scroll = (ScrollView)findViewById(R.id.stockViewScrollView);
 
-            descriptionText.setMaxLines(5);
-            final Button moreButton = (Button) findViewById(R.id.moreButton);
-            moreButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (descriptionText.getMaxLines() == 5)
-                    {
-
-                        descriptionText.setMaxLines(100);
-                        moreButton.setText("Less");
-
-                    }
-                    else
-                    {
-                        moreButton.setText("More");
-                        descriptionText.setMaxLines(5);
-                    }
-                }
-            });
-
-
         }
         catch (Exception e)
         {
@@ -130,7 +112,7 @@ public class StockActivity extends AppCompatActivity {
 
         protected void onPreExecute()
         {
-            description = (TextView) findViewById(R.id.descriptionText);
+            description = (TextView) findViewById(R.id.aboutText);
             this.ticker = "https://api.intrinio.com/data_point?identifier=" + this.ticker + "&item=short_description";
 
 
