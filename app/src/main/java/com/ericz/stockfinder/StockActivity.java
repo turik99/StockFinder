@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Base64;
@@ -19,13 +20,20 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.robinhood.spark.SparkAdapter;
+import com.robinhood.spark.SparkView;
+
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
+
+import java.util.Random;
 
 public class StockActivity extends AppCompatActivity {
 
     private JSONObject stock;
     private String html;
+    private  float[] yData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,46 +55,43 @@ public class StockActivity extends AppCompatActivity {
             TextView sector = (TextView) findViewById(R.id.sectorTextStock);
             sector.setText(getIntent().getStringExtra("sector"));
             final TextView descriptionText = (TextView) findViewById(R.id.aboutText);
-            String html = "<!-- TradingView Widget BEGIN -->\n" +
-                    "<script type=\"text/javascript\" src=\"https://d33t3vvu2t2yu5.cloudfront.net/tv.js\"></script>\n" +
-                    "<script type=\"text/javascript\">\n" +
-                    "new TradingView.widget({\n" +
-                    "  \"autosize\": true,\n" +
-                    "  \"symbol\": \" " + stock.get("ticker")+ "\",\n" +
-                    "  \"interval\": \"W\",\n" +
-                    "  \"timezone\": \"Etc/UTC\",\n" +
-                    "  \"theme\": \"Black\",\n" +
-                    "  \"style\": \"2" +
-                    "\",\n" +
-                    "  \"locale\": \"en\",\n" +
-                    "  \"toolbar_bg\": \"#f1f3f6\",\n" +
-                    "  \"enable_publishing\": false,\n" +
-                    "  \"save_image\": false,\n" +
-                    "  \"hideideas\": true\n" +
-                    "});\n" +
-                    "</script>\n" +
-                    "<!-- TradingView Widget END -->\n";
-
-            final WebView webView = (WebView) findViewById(R.id.webView) ;
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("https://d33t3vvu2t2yu5.cloudfront.net/tv.js");
-            webView.loadData(html, "text/html", "utf-8");
-
-            WebSettings settings = webView.getSettings();
-            settings.setDomStorageEnabled(true);
-
-            webView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return (event.getAction() == MotionEvent.ACTION_MOVE);
-                }
-            });
-
 
             GetDescription getDescription = new GetDescription((String)stock.get("ticker"));
             getDescription.execute();
 
             ScrollView scroll = (ScrollView)findViewById(R.id.stockViewScrollView);
+
+            SparkView sparkView = findViewById(R.id.sparkView);
+
+            yData= new float[100];
+            for (int i = 0; i<30; i++)
+            {
+                yData[i] = i;
+            }
+
+            SparkAdapter sparkAdapter = new SparkAdapter() {
+                Random random= new Random();
+
+                @Override
+                public int getCount() {
+                    return 100;
+                }
+
+                @Override
+                public Object getItem(int index) {
+                    return yData[index];
+                }
+
+                @Override
+                public float getY(int index) {
+                    return yData[index];
+                }
+            };
+
+            sparkView.setAdapter(sparkAdapter);
+
+
+
 
         }
         catch (Exception e)
@@ -204,6 +209,43 @@ public class StockActivity extends AppCompatActivity {
             return true;
         } catch (ActivityNotFoundException e) {
             return false;
+        }
+    }
+
+
+
+
+    public static class RandomizedAdapter extends SparkAdapter {
+        private final float[] yData;
+        private final Random random;
+
+        private RandomizedAdapter() {
+            random = new Random();
+            yData = new float[50];
+            randomize();
+        }
+
+        private void randomize() {
+            for (int i = 0, count = yData.length; i < count; i++) {
+                yData[i] = random.nextFloat();
+            }
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return yData.length;
+        }
+
+        @NonNull
+        @Override
+        public Object getItem(int index) {
+            return yData[index];
+        }
+
+        @Override
+        public float getY(int index) {
+            return yData[index];
         }
     }
 

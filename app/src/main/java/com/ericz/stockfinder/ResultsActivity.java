@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
 import org.json.JSONArray;
@@ -22,6 +23,9 @@ public class ResultsActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
 
         listView.bringToFront();
+
+        AdView adView = findViewById(R.id.adView3);
+        adView.loadAd(new AdRequest.Builder().build());
 
 
         try

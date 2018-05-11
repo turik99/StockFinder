@@ -108,8 +108,8 @@ public class StockList extends ArrayAdapter<String> {
             holder.ticker.setText(ticker);
             holder.percent.setText(percent);
             final String sector = sicToIndustry(stock.getInt("sic"));
-            if (name.length() > 10) {
-                holder.name.setText(name.substring(0, 10) + "...");
+            if (name.length() > 15) {
+                holder.name.setText(name.substring(0, 15) + "...");
             }
             if (sector.length() < 15) {
                 holder.sector.setText(sector);
