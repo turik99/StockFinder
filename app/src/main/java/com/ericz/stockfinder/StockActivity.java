@@ -23,9 +23,12 @@ import android.widget.TextView;
 import com.robinhood.spark.SparkAdapter;
 import com.robinhood.spark.SparkView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
+import java.io.IOException;
 import java.util.Random;
 
 public class StockActivity extends AppCompatActivity {
@@ -33,6 +36,7 @@ public class StockActivity extends AppCompatActivity {
     private JSONObject stock;
     private String html;
     private  float[] yData;
+    private SparkView sparkView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,36 +65,11 @@ public class StockActivity extends AppCompatActivity {
 
             ScrollView scroll = (ScrollView)findViewById(R.id.stockViewScrollView);
 
-            SparkView sparkView = findViewById(R.id.sparkView);
+            sparkView = findViewById(R.id.sparkView);
 
-            yData= new float[100];
-            for (int i = 0; i<30; i++)
-            {
-                yData[i] = i;
-            }
+            GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1");
 
-            SparkAdapter sparkAdapter = new SparkAdapter() {
-                Random random= new Random();
-
-                @Override
-                public int getCount() {
-                    return 100;
-                }
-
-                @Override
-                public Object getItem(int index) {
-                    return yData[index];
-                }
-
-                @Override
-                public float getY(int index) {
-                    return yData[index];
-                }
-            };
-
-            sparkView.setAdapter(sparkAdapter);
-
-
+            getStockChart.execute();
 
 
         }
@@ -188,6 +167,78 @@ public class StockActivity extends AppCompatActivity {
 
     }
 
+    public class GetStockChart extends AsyncTask<String, String, String>
+    {
+        private String ticker;
+        private String period;
+        private SparkView sparkView;
+        private String data;
+        private JSONArray jsonArray;
+        public GetStockChart(SparkView sparkView, String ticker, String period)
+        {
+            this.sparkView = findViewById(R.id.sparkView);
+            this.ticker = ticker;
+            this.period = period;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                this.data = Jsoup.connect("https://api.iextrading.com/1.0/stock/"+ this.ticker +"/chart/1y")
+                        .ignoreContentType(true).execute().body();
+                jsonArray = new JSONArray(this.data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(String result)
+        {
+
+            SparkAdapter sparkAdapter = null;
+
+            try
+            {
+                sparkAdapter = new SparkAdapter() {
+                    @Override
+                    public int getCount() {
+                        return jsonArray.length();
+                    }
+
+                    @Override
+                    public Object getItem(int index) {
+                        try {
+                            return jsonArray.getJSONObject(index).getString("label");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return "yeet";
+                    }
+
+                    @Override
+                    public float getY(int index) {
+                        try {
+                            return Float.valueOf(jsonArray.getJSONObject(index).getString("close"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            return 0;
+                        }
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+
+
+            sparkView.setAdapter(sparkAdapter);
+        }
+    }
+
 
 
 
@@ -248,7 +299,6 @@ public class StockActivity extends AppCompatActivity {
             return yData[index];
         }
     }
-
 }
 
 
