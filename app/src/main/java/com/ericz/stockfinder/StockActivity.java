@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 public class StockActivity extends AppCompatActivity {
@@ -48,7 +49,7 @@ public class StockActivity extends AppCompatActivity {
             Log.v("objet test", getIntent().getStringExtra("object"));
             TextView volume = (TextView) findViewById(R.id.volumeTextStock);
             volume.setText(stock.get("adj_volume").toString());
-            final CardView card = (CardView) findViewById(R.id.descriptionCardView);
+
             TextView peratio = (TextView) findViewById(R.id.peRatioTextStock);
             peratio.setText(stock.get("pricetoearnings").toString());
 
@@ -58,7 +59,10 @@ public class StockActivity extends AppCompatActivity {
             ticker.setText(stock.getString("ticker"));
             TextView sector = (TextView) findViewById(R.id.sectorTextStock);
             sector.setText(getIntent().getStringExtra("sector"));
-            final TextView descriptionText = (TextView) findViewById(R.id.aboutText);
+            TextView descriptionText = (TextView) findViewById(R.id.aboutText);
+
+            final TextView sparkViewPrice = findViewById(R.id.sparkViewPrice);
+            final TextView sparkViewDetails = findViewById(R.id.sparkViewDetails);
 
             GetDescription getDescription = new GetDescription((String)stock.get("ticker"));
             getDescription.execute();
@@ -70,6 +74,24 @@ public class StockActivity extends AppCompatActivity {
             GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1");
 
             getStockChart.execute();
+
+            List<Float> yPoints = sparkView.getYPoints();
+
+            Log.v("y points test", yPoints.toString());
+            sparkView.setScrubListener(new SparkView.OnScrubListener() {
+                @Override
+                public void onScrubbed(Object value) {
+                    if(value == null)
+                    {
+                        sparkViewPrice.setText("0");
+                    }
+                    else
+                    {
+                        sparkViewDetails.setText(String.valueOf(value));
+                        sparkViewPrice.setText(String.valueOf(sparkView.getY()));
+                    }
+                }
+            });
 
 
         }
@@ -184,8 +206,12 @@ public class StockActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                this.data = Jsoup.connect("https://api.iextrading.com/1.0/stock/"+ this.ticker +"/chart/1y")
+                String url = "https://api.iextrading.com/1.0/stock/"+ this.ticker +"/chart/1y";
+                this.data = Jsoup.connect(url)
                         .ignoreContentType(true).execute().body();
+
+                Log.v("IEX API test", this.data);
+                Log.v("IEX API URL", url);
                 jsonArray = new JSONArray(this.data);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -220,7 +246,7 @@ public class StockActivity extends AppCompatActivity {
                     @Override
                     public float getY(int index) {
                         try {
-                            return Float.valueOf(jsonArray.getJSONObject(index).getString("close"));
+                            return (float) jsonArray.getJSONObject(index).getDouble("open");
                         } catch (JSONException e) {
                             e.printStackTrace();
                             return 0;
