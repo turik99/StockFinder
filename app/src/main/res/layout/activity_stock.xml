@@ -200,12 +200,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:layout_marginStart="56dp"
+                        android:layout_marginStart="164dp"
                         android:layout_marginTop="8dp"
                         android:text="$0.0B"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         app:layout_constraintBottom_toTopOf="@+id/textView17"
-                        app:layout_constraintStart_toEndOf="@+id/volumeTextStock"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
@@ -259,7 +259,7 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="322dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
@@ -300,14 +300,11 @@
 
                         android:id="@+id/sparkView"
                         android:layout_width="match_parent"
-                        android:layout_height="220dp"
+                        android:layout_height="0dp"
+                        
                         android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="8dp"
-
-
-                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/dayButton"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/sparkViewDetails"
@@ -315,8 +312,73 @@
                         app:spark_lineColor="@color/colorAccent"
                         app:spark_scrubEnabled="true" />
 
-                </android.support.constraint.ConstraintLayout>
+                    <Button
+                        android:id="@+id/dayButton"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:text="1d"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
 
+                    <Button
+                        android:id="@+id/monthButton"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:text="1M"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/dayButton" />
+
+                    <Button
+                        android:id="@+id/threeMonthButton"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:text="3M"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/monthButton" />
+
+                    <Button
+                        android:id="@+id/sixMonthButton"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:text="6M"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/threeMonthButton" />
+
+                    <Button
+                        android:id="@+id/yearButton"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:text="1Y"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/sixMonthButton" />
+
+                    <Button
+                        android:id="@+id/fiveYearButton"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:text="5Y"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/yearButton" />
+
+                </android.support.constraint.ConstraintLayout>
 
 
             </android.support.v7.widget.CardView>

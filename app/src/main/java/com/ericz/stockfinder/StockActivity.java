@@ -14,6 +14,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 
 import com.robinhood.spark.SparkAdapter;
 import com.robinhood.spark.SparkView;
+import com.robinhood.spark.animation.LineSparkAnimator;
+import com.robinhood.spark.animation.MorphSparkAnimator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +48,14 @@ public class StockActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stock);
         try
         {
+
+            final Button day = findViewById(R.id.dayButton);
+            final Button month = findViewById(R.id.monthButton);
+            final Button threeMonth = findViewById(R.id.threeMonthButton);
+            final Button sixMonth = findViewById(R.id.sixMonthButton);
+            final Button year = findViewById(R.id.yearButton);
+            final Button fiveYear = findViewById(R.id.fiveYearButton);
+
             stock = new JSONObject(getIntent().getStringExtra("object"));
             Log.v("objet test", getIntent().getStringExtra("object"));
             TextView volume = (TextView) findViewById(R.id.volumeTextStock);
@@ -62,23 +73,171 @@ public class StockActivity extends AppCompatActivity {
             TextView descriptionText = (TextView) findViewById(R.id.aboutText);
 
             TextView change = findViewById(R.id.stock1ActivityChange);
-            change.setText(stock.getString("percent_change"));
+            change.setText(stock.getString("percent_change") + "%");
             TextView price = findViewById(R.id.stock1Activityprice);
             price.setText(stock.getString("close_price"));
 
             final TextView sparkViewPrice = findViewById(R.id.sparkViewPrice);
             final TextView sparkViewDetails = findViewById(R.id.sparkViewDetails);
 
+            sparkViewPrice.setText("$" + stock.getString("close_price"));
+
             GetDescription getDescription = new GetDescription((String)stock.get("ticker"));
             getDescription.execute();
 
-            ScrollView scroll = (ScrollView)findViewById(R.id.stockViewScrollView);
 
             sparkView = findViewById(R.id.sparkView);
 
-            GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1");
 
+            GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1d");
             getStockChart.execute();
+
+            MorphSparkAnimator morphSparkAnimator1 = new MorphSparkAnimator();
+            sparkView.setSparkAnimator(morphSparkAnimator1);
+
+
+            day.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+
+            day.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1d");
+                        getStockChart.execute();
+
+                        day.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+                        month.setBackgroundColor(0);
+                        threeMonth.setBackgroundColor(0);
+                        sixMonth.setBackgroundColor(0);
+                        year.setBackgroundColor(0);
+                        fiveYear.setBackgroundColor(0);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            month.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1m");
+                        getStockChart.execute();
+
+                        month.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+                        day.setBackgroundColor(0);
+                        threeMonth.setBackgroundColor(0);
+                        sixMonth.setBackgroundColor(0);
+                        year.setBackgroundColor(0);
+                        fiveYear.setBackgroundColor(0);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            threeMonth.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "3m");
+                        getStockChart.execute();
+                        threeMonth.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+                        day.setBackgroundColor(0);
+                        month.setBackgroundColor(0);
+                        day.setBackgroundColor(0);
+                        sixMonth.setBackgroundColor(0);
+                        year.setBackgroundColor(0);
+                        fiveYear.setBackgroundColor(0);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            sixMonth.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "6m");
+                        getStockChart.execute();
+
+                        sixMonth.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+                        month.setBackgroundColor(0);
+                        threeMonth.setBackgroundColor(0);
+                        day.setBackgroundColor(0);
+                        year.setBackgroundColor(0);
+                        fiveYear.setBackgroundColor(0);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            year.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        Log.v("year graph test", "occured");
+                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1y");
+                        getStockChart.execute();
+                        year.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+                        day.setBackgroundColor(0);
+                        month.setBackgroundColor(0);
+                        threeMonth.setBackgroundColor(0);
+                        sixMonth.setBackgroundColor(0);
+                        fiveYear.setBackgroundColor(0);
+
+
+
+                    } catch (JSONException e) {
+                        Log.v("year graph test", "failure");
+
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            fiveYear.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "5y");
+                        getStockChart.execute();
+
+
+                        month.setBackgroundColor(0);
+                        threeMonth.setBackgroundColor(0);
+                        day.setBackgroundColor(0);
+                        sixMonth.setBackgroundColor(0);
+                        year.setBackgroundColor(0);
+
+                        fiveYear.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
 
             sparkView.setScrubListener(new SparkView.OnScrubListener() {
                 @Override
@@ -88,7 +247,7 @@ public class StockActivity extends AppCompatActivity {
 
                         try {
                             sparkViewPrice.setText("$" + stock.getString("close_price"));
-                            sparkViewDetails.setText(stock.getString(" "));
+                            sparkViewDetails.setText(" ");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -101,7 +260,7 @@ public class StockActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         try {
-                            sparkViewPrice.setText("$" +String.valueOf(new JSONObject(String.valueOf(value)).getDouble("close")));
+                            sparkViewPrice.setText("$" +String.valueOf(new JSONObject(String.valueOf(value)).getDouble("open")));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -119,6 +278,109 @@ public class StockActivity extends AppCompatActivity {
 
 
     }
+
+
+
+    public class GetStockChart extends AsyncTask<String, String, String>
+    {
+        private String ticker;
+        private String period;
+        private SparkView sparkView;
+        private String data;
+        private JSONArray jsonArray;
+        public GetStockChart(SparkView sparkView, String ticker, String period)
+        {
+            this.sparkView = findViewById(R.id.sparkView);
+            this.ticker = ticker;
+            this.period = period;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String url = "https://api.iextrading.com/1.0/stock/"+ this.ticker +"/chart/" + period;
+                this.data = Jsoup.connect(url)
+                        .ignoreContentType(true).execute().body();
+
+                Log.v("IEX API test", this.data);
+                Log.v("IEX API URL", url);
+                jsonArray = new JSONArray(this.data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(String result)
+        {
+
+            SparkAdapter sparkAdapter = null;
+
+            try
+            {
+                sparkAdapter = new SparkAdapter() {
+                    @Override
+                    public int getCount() {
+
+                        try
+                        {
+                            return jsonArray.length();
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                            return 0;
+                        }
+                    }
+
+                    @Override
+                    public Object getItem(int index) {
+                        try {
+                            return jsonArray.getJSONObject(index);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return "yeet";
+                    }
+
+                    @Override
+                    public float getY(int index) {
+
+                        if(period == "1d")
+                        {
+                            try {
+                                return (float) jsonArray.getJSONObject(index).getDouble("average");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                return 0;
+                            }
+
+
+                        }
+                        else
+                        {
+                            try {
+                                return (float) jsonArray.getJSONObject(index).getDouble("open");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                return 0;
+                            }
+
+                        }
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            sparkView.setAdapter(sparkAdapter);
+        }
+    }
+
 
 
     public class GetDescription extends AsyncTask<String, String, String>
@@ -208,93 +470,6 @@ public class StockActivity extends AppCompatActivity {
 
     }
 
-    public class GetStockChart extends AsyncTask<String, String, String>
-    {
-        private String ticker;
-        private String period;
-        private SparkView sparkView;
-        private String data;
-        private JSONArray jsonArray;
-        public GetStockChart(SparkView sparkView, String ticker, String period)
-        {
-            this.sparkView = findViewById(R.id.sparkView);
-            this.ticker = ticker;
-            this.period = period;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                String url = "https://api.iextrading.com/1.0/stock/"+ this.ticker +"/chart/5y";
-                this.data = Jsoup.connect(url)
-                        .ignoreContentType(true).execute().body();
-
-                Log.v("IEX API test", this.data);
-                Log.v("IEX API URL", url);
-                jsonArray = new JSONArray(this.data);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        protected void onPostExecute(String result)
-        {
-
-            SparkAdapter sparkAdapter = null;
-
-            try
-            {
-                sparkAdapter = new SparkAdapter() {
-                    @Override
-                    public int getCount() {
-
-                        try
-                        {
-                            return jsonArray.length();
-
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                            return 0;
-                        }
-                    }
-
-                    @Override
-                    public Object getItem(int index) {
-                        try {
-                            return jsonArray.getJSONObject(index);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        return "yeet";
-                    }
-
-                    @Override
-                    public float getY(int index) {
-                        try {
-                            return (float) jsonArray.getJSONObject(index).getDouble("open");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            return 0;
-                        }
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-
-
-            sparkView.setAdapter(sparkAdapter);
-        }
-    }
-
-
 
 
     /** Open another app.
@@ -318,42 +493,61 @@ public class StockActivity extends AppCompatActivity {
         }
     }
 
+    public class ShortNumberFormatter{
+
+        public static final long BILLION=1000000000;
+        public static final long MILLION=1000000;
+        public static final long THOUSAND=1000;
 
 
+        public ShortNumberFormatter(){}
 
-    public static class RandomizedAdapter extends SparkAdapter {
-        private final float[] yData;
-        private final Random random;
+        private String format(String stringValue){
+            if(stringValue != null){
+                try {
+                    long l = (long)Double.parseDouble(stringValue.trim());
+                    long millions = l/MILLION;
+                    long billions = l/BILLION;
 
-        private RandomizedAdapter() {
-            random = new Random();
-            yData = new float[50];
-            randomize();
-        }
+                    if (billions >= 1)
+                    {
+                        return billions + "B";
+                    }
 
-        private void randomize() {
-            for (int i = 0, count = yData.length; i < count; i++) {
-                yData[i] = random.nextFloat();
+                    if(millions>=1)
+                    {
+                        return millions + "M";
+                    }
+
+                    else
+                    {
+                        long thousands = l/THOUSAND;
+                        if(thousands>=1)
+                        {
+                            return thousands + "K";
+                        }
+                        else
+                        {
+                            return String.valueOf(l);
+                        }
+                    }
+                } catch(NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                    return "0";
+                }
             }
-            notifyDataSetChanged();
+            return "0";
         }
 
-        @Override
-        public int getCount() {
-            return yData.length;
-        }
+//        public static void main(String []args){
+//            ShortNumberFormatter snFormatter = new ShortNumberFormatter();
+//            System.out.println(snFormatter.format("100038"));
+//            System.out.println(snFormatter.format("10.43e7"));
+//            System.out.println(snFormatter.format("123"));
+//        }
 
-        @NonNull
-        @Override
-        public Object getItem(int index) {
-            return yData[index];
-        }
-
-        @Override
-        public float getY(int index) {
-            return yData[index];
-        }
     }
+
 }
 
 
