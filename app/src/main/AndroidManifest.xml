@@ -39,12 +39,18 @@
 
             android:name=".StockActivity"
             android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ericz.stockfinder.ResultsActivity">
+
+            </meta-data>
+
 
         </activity>
         <activity android:name=".ResultsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PsaximoTheme"
-
+            android:launchMode="singleTop"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

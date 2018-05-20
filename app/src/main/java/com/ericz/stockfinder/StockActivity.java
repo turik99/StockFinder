@@ -1,9 +1,11 @@
 package com.ericz.stockfinder;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +27,8 @@ import com.robinhood.spark.SparkAdapter;
 import com.robinhood.spark.SparkView;
 import com.robinhood.spark.animation.LineSparkAnimator;
 import com.robinhood.spark.animation.MorphSparkAnimator;
+import com.robinhood.ticker.TickerUtils;
+import com.robinhood.ticker.TickerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +36,10 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -41,13 +49,24 @@ public class StockActivity extends AppCompatActivity {
     private String html;
     private  float[] yData;
     private SparkView sparkView;
+    private ShortNumberFormatter snFormatter = new ShortNumberFormatter();
+    private boolean dayOn;
+    private int listSize;
+    private JSONArray mainArray;
+    private DecimalFormat decimalFormat = new DecimalFormat("%#0.000");
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock);
+        Intent intent = getIntent();
+
         try
         {
+
+            final DecimalFormat df = new DecimalFormat("###.##");
+
 
             final Button day = findViewById(R.id.dayButton);
             final Button month = findViewById(R.id.monthButton);
@@ -59,13 +78,23 @@ public class StockActivity extends AppCompatActivity {
             stock = new JSONObject(getIntent().getStringExtra("object"));
             Log.v("objet test", getIntent().getStringExtra("object"));
             TextView volume = (TextView) findViewById(R.id.volumeTextStock);
-            volume.setText(stock.get("adj_volume").toString());
+            volume.setText(snFormatter.format(stock.get("adj_volume").toString()));
 
             TextView peratio = (TextView) findViewById(R.id.peRatioTextStock);
             peratio.setText(stock.get("pricetoearnings").toString());
 
+
             TextView name = (TextView) findViewById(R.id.stockNameActivity);
-            name.setText(stock.getString("name"));
+            String nameString = stock.getString("name");
+            if (nameString.length()>=15)
+            {
+                name.setText(stock.getString("name").substring(0, 15) + "...");
+
+            }
+            else
+            {
+                name.setText(nameString);
+            }
             TextView ticker = findViewById(R.id.tickerTextStock);
             ticker.setText(stock.getString("ticker"));
             TextView sector = (TextView) findViewById(R.id.sectorTextStock);
@@ -73,41 +102,157 @@ public class StockActivity extends AppCompatActivity {
             TextView descriptionText = (TextView) findViewById(R.id.aboutText);
 
             TextView change = findViewById(R.id.stock1ActivityChange);
-            change.setText(stock.getString("percent_change") + "%");
+            final String percentChange = getIntent().getStringExtra("percent_change");
+
+            Log.v("percent change test", percentChange);
+            if (percentChange.contains("-"))
+            {
+                change.setText(percentChange);
+                change.setTextColor(Color.RED);
+            }
+            else if (percentChange.contains("+"))
+            {
+                change.setText(percentChange);
+                change.setTextColor(Color.GREEN);
+            }
+            else
+            {
+                change.setText("0.0");
+            }
+
             TextView price = findViewById(R.id.stock1Activityprice);
-            price.setText(stock.getString("close_price"));
+            price.setText(df.format(Float.valueOf(stock.getString("close_price"))));
 
-            final TextView sparkViewPrice = findViewById(R.id.sparkViewPrice);
+            final TickerView sparkViewPrice = findViewById(R.id.sparkViewPrice);
             final TextView sparkViewDetails = findViewById(R.id.sparkViewDetails);
+            sparkViewPrice.setCharacterLists(TickerUtils.provideNumberList());
 
-            sparkViewPrice.setText("$" + stock.getString("close_price"));
+            sparkViewPrice.setText("$" + df.format(Float.valueOf(stock.getString("close_price"))));
 
             GetDescription getDescription = new GetDescription((String)stock.get("ticker"));
             getDescription.execute();
 
 
+
             sparkView = findViewById(R.id.sparkView);
 
 
-            GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1d");
+            mainArray = new JSONArray();
+            GetStockChart getStockChart = new GetStockChart(sparkView, sparkViewDetails, stock.getString("ticker"), "1d", percentChange);
             getStockChart.execute();
+            this.dayOn = true;
 
-            MorphSparkAnimator morphSparkAnimator1 = new MorphSparkAnimator();
-            sparkView.setSparkAnimator(morphSparkAnimator1);
 
+            final DecimalFormat percentFormat = new DecimalFormat("0.00%");
 
             day.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
+
+
+
+            sparkView.setScrubListener(new SparkView.OnScrubListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onScrubbed(Object value) {
+                    if(value == null)
+                    {
+                        if (dayOn)
+                        {
+                            try {
+                                sparkViewPrice.setText("$" + df.format(Float.valueOf(stock.getString("close_price"))));
+                                sparkViewDetails.setText(getIntent().getStringExtra("percent_change"));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else
+                        {
+                            try {
+
+
+                                JSONObject first = mainArray.getJSONObject(0);
+                                JSONObject last = mainArray.getJSONObject(mainArray.length()-1);
+                                sparkViewPrice.setText("$" + df.format(Float.valueOf(stock.getString("close_price"))));
+
+//                                sparkViewDetails.setText(last.getDouble("changeOverTime")
+//                                        + " since" + first.getString("label"));
+
+                                sparkViewDetails.setText(percentFormat.format(last.getDouble("changeOverTime"))+" since "+first.getString("label"));
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }
+
+                    //SCRUBBED VALUE IS NOT NULL HERE
+                    else
+                    {
+                        if(dayOn)
+                        {
+
+                            try
+                            {
+                                JSONObject first = mainArray.getJSONObject(0);
+                                JSONObject last = mainArray.getJSONObject(mainArray.length()-1);
+
+                                JSONObject jsonObject = new JSONObject(String.valueOf(value));
+                                sparkViewDetails.setText(percentFormat.format(jsonObject.getDouble("marketChangeOverTime"))
+                                        + " since "+ String.valueOf(first.getString("label")));
+                            }
+                            catch (JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+                            try
+                            {
+                                sparkViewPrice.setText("$" +df.format(Float.valueOf(String.valueOf(new JSONObject(String.valueOf(value)).getDouble("marketAverage")))));
+                            }
+                            catch (JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                JSONObject jsonObject = new JSONObject(String.valueOf(value));
+                                sparkViewDetails.setText(jsonObject.getString("label"));
+                            }
+                            catch (JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+                            try {
+                                sparkViewPrice.setText("$" +df.format(Float.valueOf(String.valueOf(new JSONObject(
+                                        String.valueOf(value))
+                                        .getDouble("open")))));
+                            }
+                            catch (JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                }
+            });
 
             day.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
-                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1d");
+                        GetStockChart getStockChart = new GetStockChart(sparkView, sparkViewDetails, stock.getString("ticker"), "1d", percentChange);
                         getStockChart.execute();
 
                         day.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
+                        dayOn = true;
                         month.setBackgroundColor(0);
                         threeMonth.setBackgroundColor(0);
                         sixMonth.setBackgroundColor(0);
@@ -126,9 +271,9 @@ public class StockActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     try {
-                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1m");
+                        GetStockChart getStockChart = new GetStockChart(sparkView, sparkViewDetails, stock.getString("ticker"), "1m", percentChange);
                         getStockChart.execute();
-
+                        dayOn = false;
                         month.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
                         day.setBackgroundColor(0);
@@ -148,9 +293,10 @@ public class StockActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     try {
-                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "3m");
+                        GetStockChart getStockChart = new GetStockChart(sparkView, sparkViewDetails, stock.getString("ticker"), "3m", percentChange);
                         getStockChart.execute();
                         threeMonth.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        dayOn = false;
 
                         day.setBackgroundColor(0);
                         month.setBackgroundColor(0);
@@ -171,8 +317,9 @@ public class StockActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     try {
-                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "6m");
+                        GetStockChart getStockChart = new GetStockChart(sparkView, sparkViewDetails, stock.getString("ticker"), "6m", percentChange);
                         getStockChart.execute();
+                        dayOn = false;
 
                         sixMonth.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
@@ -195,9 +342,11 @@ public class StockActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     try {
                         Log.v("year graph test", "occured");
-                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "1y");
+                        GetStockChart getStockChart = new GetStockChart(sparkView, sparkViewDetails,
+                                stock.getString("ticker"), "1y", percentChange);
                         getStockChart.execute();
                         year.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        dayOn = false;
 
                         day.setBackgroundColor(0);
                         month.setBackgroundColor(0);
@@ -220,9 +369,11 @@ public class StockActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     try {
-                        GetStockChart getStockChart = new GetStockChart(sparkView, stock.getString("ticker"), "5y");
+                        GetStockChart getStockChart = new GetStockChart(
+                                sparkView, sparkViewDetails, stock.getString("ticker"), "5y", percentChange);
                         getStockChart.execute();
 
+                        dayOn = false;
 
                         month.setBackgroundColor(0);
                         threeMonth.setBackgroundColor(0);
@@ -239,44 +390,11 @@ public class StockActivity extends AppCompatActivity {
             });
 
 
-            sparkView.setScrubListener(new SparkView.OnScrubListener() {
-                @Override
-                public void onScrubbed(Object value) {
-                    if(value == null)
-                    {
-
-                        try {
-                            sparkViewPrice.setText("$" + stock.getString("close_price"));
-                            sparkViewDetails.setText(" ");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else
-                    {
-                        try {
-                            sparkViewDetails.setText(String.valueOf(new JSONObject(String.valueOf(value)).getString("label")));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            sparkViewPrice.setText("$" +String.valueOf(new JSONObject(String.valueOf(value)).getDouble("open")));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-
-
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-
-
-
     }
 
 
@@ -288,11 +406,20 @@ public class StockActivity extends AppCompatActivity {
         private SparkView sparkView;
         private String data;
         private JSONArray jsonArray;
-        public GetStockChart(SparkView sparkView, String ticker, String period)
+        private JSONArray cleanArray;
+        private TextView sparkViewDetails;
+        private JSONObject first;
+        private JSONObject last;
+        private DecimalFormat decimalFormat = new DecimalFormat("#0.00%");
+        private String percentChange;
+
+        public GetStockChart(SparkView sparkView, TextView sparkViewDetails, String ticker, String period, String percentChange)
         {
             this.sparkView = findViewById(R.id.sparkView);
             this.ticker = ticker;
             this.period = period;
+            this.sparkViewDetails = sparkViewDetails;
+            this.percentChange = percentChange;
         }
 
         @Override
@@ -305,6 +432,53 @@ public class StockActivity extends AppCompatActivity {
                 Log.v("IEX API test", this.data);
                 Log.v("IEX API URL", url);
                 jsonArray = new JSONArray(this.data);
+                cleanArray = new JSONArray();
+
+
+                if(period.equals("1d"))
+                {
+                    for (int i = 0; i<jsonArray.length(); i++)
+                    {
+                        if (jsonArray.getJSONObject(i).getDouble("marketAverage") != -1)
+                        {
+                            Log.v("data added", "added" + jsonArray.getJSONObject(i).getString("label"));
+                            cleanArray.put(jsonArray.getJSONObject(i));
+
+                        }
+                    }
+
+                    for (int i = 0; i<cleanArray.length(); i++)
+                    {
+                        Log.v("clean array test", cleanArray.getJSONObject(i).getString("marketAverage"));
+                    }
+                    StockActivity.this.listSize = cleanArray.length();
+
+                    StockActivity.this.mainArray = cleanArray;
+
+                }
+                else
+                {
+                    for (int i = 0; i<jsonArray.length(); i++)
+                    {
+                        if (jsonArray.getJSONObject(i).getDouble("open") != -1)
+                        {
+                            Log.v("data added", "added" + jsonArray.getJSONObject(i).getString("label"));
+                            cleanArray.put(jsonArray.getJSONObject(i));
+
+                        }
+                    }
+
+                    for (int i = 0; i<cleanArray.length(); i++)
+                    {
+                        Log.v("clean array test", cleanArray.getJSONObject(i).getString("open"));
+                    }
+                    StockActivity.this.listSize = cleanArray.length();
+
+                    StockActivity.this.mainArray = cleanArray;
+
+                }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -312,6 +486,7 @@ public class StockActivity extends AppCompatActivity {
             return null;
         }
 
+        @SuppressLint("SetTextI18n")
         protected void onPostExecute(String result)
         {
 
@@ -320,12 +495,15 @@ public class StockActivity extends AppCompatActivity {
             try
             {
                 sparkAdapter = new SparkAdapter() {
+                    String period = GetStockChart.this.period;
+
+
                     @Override
                     public int getCount() {
 
                         try
                         {
-                            return jsonArray.length();
+                            return cleanArray.length();
 
                         }
                         catch (Exception e)
@@ -338,7 +516,7 @@ public class StockActivity extends AppCompatActivity {
                     @Override
                     public Object getItem(int index) {
                         try {
-                            return jsonArray.getJSONObject(index);
+                            return cleanArray.getJSONObject(index);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -347,14 +525,37 @@ public class StockActivity extends AppCompatActivity {
 
                     @Override
                     public float getY(int index) {
-
-                        if(period == "1d")
+                        float lastY = 0;
+                        if(period.equals("1d"))
                         {
+
                             try {
-                                return (float) jsonArray.getJSONObject(index).getDouble("average");
-                            } catch (JSONException e) {
+                                Log.v("first last y test", String.valueOf((float) cleanArray.getJSONObject(0).getDouble("marketOpen")));
+                                lastY = (float) cleanArray.getJSONObject(0).getDouble("marketOpen");
+                            }
+                            catch (JSONException e) {
                                 e.printStackTrace();
-                                return 0;
+                            }
+
+                            try {
+                                float mktAvg = (float) cleanArray.getJSONObject(index).getDouble("marketAverage");
+                                Log.v("market average test", String.valueOf(mktAvg));
+                                if (mktAvg == -1.0)
+                                {
+                                    Log.v(" CHANGE last y test", String.valueOf(lastY));
+                                    return lastY;
+
+                                }
+                                else
+                                {
+                                    lastY = mktAvg;
+                                    return mktAvg;
+
+                                }
+                            }
+                            catch (JSONException e) {
+                                e.printStackTrace();
+                                return lastY;
                             }
 
 
@@ -362,20 +563,54 @@ public class StockActivity extends AppCompatActivity {
                         else
                         {
                             try {
-                                return (float) jsonArray.getJSONObject(index).getDouble("open");
+                                return (float) cleanArray.getJSONObject(index).getDouble("open");
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                return 0;
+                                return lastY;
                             }
 
                         }
                     }
+
+                    @Override
+                    public boolean hasBaseLine() {
+                        return period.equals("1d");
+                    }
+
+                    public float getBaseLine()
+                    {
+                        try {
+                            Log.v("mkt open baseline test", String.valueOf((float) cleanArray.getJSONObject(0).getDouble("marketOpen")));
+                            return (float) cleanArray.getJSONObject(0).getDouble("marketOpen");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            return 0;
+                        }
+                    }
+
+
+
                 };
+                first = cleanArray.getJSONObject(0);
+                last = cleanArray.getJSONObject(mainArray.length()-1);
+
+                if (dayOn)
+                {
+                    sparkViewDetails.setText(percentChange);
+                }
+                else
+                {
+                    sparkViewDetails.setText(decimalFormat.format(last.getDouble("changeOverTime") ) + " since " + first.getString("label"));
+                }
+
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
+
+
 
             sparkView.setAdapter(sparkAdapter);
         }
@@ -399,7 +634,7 @@ public class StockActivity extends AppCompatActivity {
         {
             mktCap = findViewById(R.id.marketCap);
             description = (TextView) findViewById(R.id.aboutText);
-            this.ticker = "https://api.intrinio.com/data_point?identifier=" + this.ticker + "&item=short_description,market_cap";
+            this.ticker = "https://api.intrinio.com/data_point?identifier=" + this.ticker + "&item=short_description,marketcap";
 
 
         }
@@ -436,7 +671,7 @@ public class StockActivity extends AppCompatActivity {
             {
                 JSONObject jsonObject = new JSONObject(result);
                 description.setText(jsonObject.getJSONArray("data").getJSONObject(0).getString("value"));
-                mktCap.setText(jsonObject.getJSONArray("data").getJSONObject(1).getString("value"));
+                mktCap.setText(snFormatter.format(jsonObject.getJSONArray("data").getJSONObject(1).getString("value")));
             }
             catch (Exception e)
             {
@@ -547,6 +782,16 @@ public class StockActivity extends AppCompatActivity {
 //        }
 
     }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+
+    }
+
 
 }
 

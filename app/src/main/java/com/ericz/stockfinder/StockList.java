@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,8 +37,6 @@ public class StockList extends ArrayAdapter<String> {
     private JSONArray stocks;
     private Activity context;
     private String sicCode;
-
-
     private boolean isClicked = false;
 
 
@@ -118,6 +117,7 @@ public class StockList extends ArrayAdapter<String> {
             }
 
 
+            final String finalPercent = percent;
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,9 +125,17 @@ public class StockList extends ArrayAdapter<String> {
                     Log.v("click on rowview", "Yeet");
 
 
+                    CardView stockCard = v.findViewById(R.id.stockListCard);
+
                     Intent intent = new Intent(getContext(), StockActivity.class);
+//                    ActivityOptionsCompat options = ActivityOptionsCompat
+//                            .makeSceneTransitionAnimation(context, (View)stockCard, "stockcard");
+//
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
                     intent.putExtra("object", stockString);
                     intent.putExtra("sector", sector);
+                    intent.putExtra("percent_change", finalPercent);
                     getContext().startActivity(intent);
 
 

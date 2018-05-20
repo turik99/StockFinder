@@ -98,6 +98,16 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/stock1Activityprice" />
 
+                    <TextView
+                        android:id="@+id/textView34"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="today"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -112,7 +122,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Ticker"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView34" />
+                app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
 
             <android.support.v7.widget.CardView
@@ -271,18 +281,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <TextView
+                    <com.robinhood.ticker.TickerView
                         android:id="@+id/sparkViewPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="$68.50"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:gravity="left"
+                        android:text="$0"
+                        android:textSize="30sp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:ticker_animationDuration="50"
+                        app:ticker_animateMeasurementChange="true"
+                        app:ticker_defaultCharacterList="number" />
 
                     <TextView
                         android:id="@+id/sparkViewDetails"
@@ -291,7 +303,6 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="+$0.97 [+4.55%] Past 5 Years"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/sparkViewPrice" />
@@ -301,14 +312,12 @@
                         android:id="@+id/sparkView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
                         app:layout_constraintBottom_toTopOf="@+id/dayButton"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/sparkViewDetails"
-                        app:spark_fillColor="@color/colorPrimaryDark"
                         app:spark_lineColor="@color/colorAccent"
                         app:spark_scrubEnabled="true" />
 
@@ -382,18 +391,6 @@
 
 
             </android.support.v7.widget.CardView>
-
-            <TextView
-                android:id="@+id/textView34"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
 
         </android.support.constraint.ConstraintLayout>
