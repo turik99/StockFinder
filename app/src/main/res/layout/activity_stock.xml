@@ -94,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Loading Sector"
+                        android:text="@string/industry"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/stock1Activityprice" />
 
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:layout_marginEnd="8dp"
-                        android:text="today"
+                        android:text="@string/today"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -184,13 +184,13 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:paddingBottom="4dp"
                         android:id="@+id/textView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
-                        android:text="Volume"
+                        android:paddingBottom="4dp"
+                        android:text="@string/volume"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/volumeTextStock" />
 
@@ -201,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:paddingBottom="4dp"
-                        android:text="Market Cap"
+                        android:text="@string/marketcap"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/marketCap" />
 

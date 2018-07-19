@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Psaximo</string>
+    <string name="sample">Dieser ist eine sample description</string>
+    <string name="debtequity">Schuld über Aktiva</string>
+    <string name="profitmargin">Gewinnspanne</string>
+    <string name="pricebook">Preis über Aktiva</string>
+    <string name="marketcap">Markt Kapitalisierung</string>
+    <string name="industry">Kategorie</string>
+    <string name="exchange">Börse</string>
+    <string name="changepercenttoday">Prozent Veränderung heute</string>
+    <string name="volume">Volumen</string>
+    <string name="price">Preis</string>
+    <string name="dividendpershare">Dividende je Aktie</string>
+    <string name="findstocks">Findet Aktien</string>
+    <string name="other">Anderen</string>
+    <string name="movements">Bewegungen</string>
+    <string name="metrics">Metriken</string>
+    <string name="valuation">Bewertung</string>
+    <string name="today">heute</string>
+
+</resources>

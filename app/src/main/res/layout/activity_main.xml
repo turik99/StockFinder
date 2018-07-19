@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Other"
+                    android:text="@string/other"
                     android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Industry"
+                    android:text="@string/industry"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView45" />
@@ -75,7 +75,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
 
-                    android:text="Exchange"
+                    android:text="@string/exchange"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/sectorSpinner" />
@@ -103,7 +103,7 @@
             android:id="@+id/cardView5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             ads:cardCornerRadius="4dp"
             ads:cardElevation="4dp"
@@ -115,13 +115,13 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:textColor="@color/colorAccent"
                     android:id="@+id/textView44"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Movements"
+                    android:text="@string/movements"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -129,11 +129,11 @@
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
-                    android:layout_height="33dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="% Change Today"
+                    android:maxWidth="150dp"
+                    android:text="@string/changepercenttoday"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -156,19 +156,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Volume"
+                    android:text="@string/volume"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/percentSpinner" />
 
                 <Spinner
                     android:id="@+id/volumeSpinner"
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:entries="@array/volume"
+                    android:maxWidth="150dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -182,25 +183,25 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             ads:cardCornerRadius="4dp"
             ads:cardElevation="4dp"
-            ads:layout_constraintStart_toEndOf="@+id/cardView2"
+            ads:layout_constraintStart_toEndOf="@+id/cardView4"
             app:layout_constraintTop_toTopOf="parent">
 
             <android.support.constraint.ConstraintLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:textColor="@color/colorAccent"
                     android:id="@+id/textView43"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Valuation"
+                    android:text="@string/valuation"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -218,14 +219,15 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
                 <TextView
-
                     android:id="@+id/textView4"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Dividend / Share"
+                    android:lineSpacingExtra="8sp"
+                    android:maxWidth="150dp"
+                    android:text="@string/dividendpershare"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -233,11 +235,13 @@
 
                 <TextView
                     android:id="@+id/textView8"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Market Cap"
+                    android:maxWidth="150dp"
+                    android:text="@string/marketcap"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView43" />
@@ -258,7 +262,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="P/E Ratio"
+                    android:text="@string/pricetoearnings"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/marketcapSpinner" />
@@ -293,25 +297,28 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:textColor="@color/colorAccent"
                     android:id="@+id/textView42"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Metrics"
+                    android:text="@string/metrics"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:maxWidth="200dp"
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Debt to Equity"
+                    android:text="@string/debtequity"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    ads:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView42" />
 
@@ -319,11 +326,9 @@
                     android:id="@+id/debtEquitySpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:entries="@array/debt_to_equity"
-                    ads:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
@@ -334,7 +339,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Profit Margin"
+                    android:text="@string/profitmargin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/debtEquitySpinner" />
@@ -355,7 +360,7 @@
                     android:layout_height="29dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Price to Book"
+                    android:text="@string/pricebook"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/profitSpinner" />
@@ -376,7 +381,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Price"
+                    android:text="@string/price"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/pricetobook" />
@@ -426,7 +431,7 @@
             android:layout_marginTop="16dp"
             android:background="@color/colorAccent"
             android:onClick="stocks"
-            android:text="Find Stocks"
+            android:text="@string/findstocks"
             ads:layout_constraintEnd_toEndOf="@+id/cardView5"
             ads:layout_constraintStart_toStartOf="@+id/cardView5"
             ads:layout_constraintTop_toBottomOf="@+id/cardView5" />
@@ -443,7 +448,7 @@
             ads:layout_constraintEnd_toEndOf="parent"
             ads:layout_constraintHorizontal_bias="0.0"
             ads:layout_constraintStart_toStartOf="parent"
-            ads:layout_constraintTop_toBottomOf="@+id/cardView4" />
+            ads:layout_constraintTop_toBottomOf="@+id/button2" />
     </android.support.constraint.ConstraintLayout>
 
 

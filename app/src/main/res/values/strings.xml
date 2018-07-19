@@ -63,7 +63,7 @@
 
     <string-array name="earnings">
         <item>Any</item>
-        <item>Next 5 days</item>
+        <item>in 5 days</item>
         <item>Next 10 days</item>
         <item>Next 30 days</item>
     </string-array>
@@ -140,4 +140,21 @@
         <item>High dividends</item>
 
     </string-array>
+    <string name="debtequity">Debt to Equity</string>
+    <string name="profitmargin">Profit Margin</string>
+    <string name="pricebook">Price to Book</string>
+    <string name="marketcap">Market Cap</string>
+    <string name="pricetoearnings" translatable="false">P/E Ratio</string>
+    <string name="industry">Industry</string>
+    <string name="exchange">Exchange</string>
+    <string name="changepercenttoday">% Change Today</string>
+    <string name="volume">Volume</string>
+    <string name="price">Price</string>
+    <string name="dividendpershare">Dividend / Share</string>
+    <string name="findstocks">Find Stocks</string>
+    <string name="other">Other</string>
+    <string name="movements">Movements</string>
+    <string name="metrics">Metrics</string>
+    <string name="valuation">Valuation</string>
+    <string name="today">today</string>
 </resources>
